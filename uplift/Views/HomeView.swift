@@ -13,11 +13,21 @@ struct HomeView: View {
     @StateObject private var workoutViewModel = WorkoutViewModel()
     @StateObject private var storageManager = StorageManager.shared
     
+    init() {
+        // Default initializer - creates its own WorkoutViewModel
+    }
+    
+    init(workoutViewModel: WorkoutViewModel) {
+        // Custom initializer - uses shared WorkoutViewModel
+        _workoutViewModel = StateObject(wrappedValue: workoutViewModel)
+    }
+    
     @State private var selectedDate = Date()
     @State private var selectedTemplate: WorkoutTemplate?
     @State private var showingTemplateSelector = false
     @State private var showingFullCalendar = false
     @State private var showingWorkoutDetail: WorkoutSession?
+    @State private var navigateToWorkout = false
     
     // Get workouts for selected date
     private var workoutsForSelectedDate: [WorkoutSession] {
@@ -127,6 +137,7 @@ struct HomeView: View {
                                 ForEach(inProgressWorkouts) { workout in
                                     InProgressWorkoutCard(workout: workout) {
                                         workoutViewModel.resumeWorkout(workout)
+                                        navigateToWorkout = true
                                     }
                                 }
                             }
@@ -161,6 +172,9 @@ struct HomeView: View {
                     Spacer()
                 }
                 .padding(.top)
+            }
+            .navigationDestination(isPresented: $navigateToWorkout) {
+                WorkoutLoggingView(viewModel: workoutViewModel)
             }
             .sheet(isPresented: $showingTemplateSelector) {
                 TemplateSelectionSheet(
@@ -219,6 +233,9 @@ struct HomeView: View {
         
         storageManager.addWorkoutSession(session)
         storageManager.updateTemplateLastUsed(template.id)
+        
+        // Navigate to workout logging view
+        navigateToWorkout = true
     }
 }
 

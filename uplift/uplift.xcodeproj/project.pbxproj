@@ -17,6 +17,7 @@
 		262113F92EE0CABF00A041AD /* ProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F62EE0C97400A041AD /* ProgressViewModel.swift */; };
 		262113FA2EE0CAC900A041AD /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113EF2EE0C81D00A041AD /* StorageManager.swift */; };
 		262113FB2EE0CAD500A041AD /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F02EE0C82700A041AD /* UserDefaultsManager.swift */; };
+		262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */; };
 		26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CC2EDF715800B2BE71 /* upliftApp.swift */; };
 		26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CE2EDF715800B2BE71 /* ContentView.swift */; };
 		26AE90D12EDF715C00B2BE71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26AE90D02EDF715C00B2BE71 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 		262113F42EE0C94900A041AD /* TemplateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewModel.swift; sourceTree = "<group>"; };
 		262113F52EE0C95F00A041AD /* WorkoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutViewModel.swift; sourceTree = "<group>"; };
 		262113F62EE0C97400A041AD /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
+		262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLoggingView.swift; sourceTree = "<group>"; };
 		26AE90C92EDF715800B2BE71 /* uplift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uplift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AE90CC2EDF715800B2BE71 /* upliftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = upliftApp.swift; sourceTree = "<group>"; };
 		26AE90CE2EDF715800B2BE71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		26AE90E02EE0A6E200B2BE71 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
 				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
 			);
 			path = Views;
@@ -207,6 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */,
 				262113EB2EE0C79600A041AD /* WorkoutHistory.swift in Sources */,
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				262113ED2EE0C7A500A041AD /* UserProfile.swift in Sources */,
