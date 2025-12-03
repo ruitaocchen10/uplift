@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E12EE0C12500A041AD /* Font+Extension.swift */; };
 		26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CC2EDF715800B2BE71 /* upliftApp.swift */; };
 		26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CE2EDF715800B2BE71 /* ContentView.swift */; };
 		26AE90D12EDF715C00B2BE71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26AE90D02EDF715C00B2BE71 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		262113E12EE0C12500A041AD /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		26AE90C92EDF715800B2BE71 /* uplift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uplift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AE90CC2EDF715800B2BE71 /* upliftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = upliftApp.swift; sourceTree = "<group>"; };
 		26AE90CE2EDF715800B2BE71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,9 +38,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		262113DE2EE0C10800A041AD /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				262113DF2EE0C11100A041AD /* Extensions */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		262113DF2EE0C11100A041AD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				262113E12EE0C12500A041AD /* Font+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				262113DE2EE0C10800A041AD /* Utilities */,
 				26AE90E02EE0A6E200B2BE71 /* Views */,
 				26AE90D72EE0A3C100B2BE71 /* Models */,
 				26AE90D02EDF715C00B2BE71 /* Assets.xcassets */,
@@ -147,6 +166,7 @@
 			files = (
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
+				262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */,
 				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
 				26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */,

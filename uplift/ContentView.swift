@@ -13,16 +13,21 @@ struct ContentView: View {
             HomeView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
+                        .font(.futuraBody())
                 }
             
             Text("Workout View") // We'll build this next
+                .font(.futuraBody())
                 .tabItem {
                     Label("Workout", systemImage: "figure.strengthtraining.traditional")
+                        .font(.futuraBody())
                 }
             
             Text("Profile") // Placeholder
+                .font(.futuraBody())
                 .tabItem {
                     Label("You", systemImage: "person.circle.fill")
+                        .font(.futuraBody())
                 }
         }
         .tint(.white) // Tab icon color when selected

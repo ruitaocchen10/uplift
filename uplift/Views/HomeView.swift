@@ -20,11 +20,10 @@ struct HomeView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text("Welcome back")
-                                .font(.subheadline)
+                                .font(.futuraSubheadline())
                                 .foregroundColor(.gray)
                             Text("Ruitao Chen")
-                                .font(.title2)
-                                .bold()
+                                .font(.futuraTitle2())
                                 .foregroundColor(.white)
                         }
                         
@@ -33,7 +32,7 @@ struct HomeView: View {
                         Button(action: {}) {
                             Image(systemName: "magnifyingglass")
                                 .foregroundColor(.white)
-                                .font(.title3)
+                                .font(.futuraTitle3())
                         }
                     }
                     .padding(.horizontal)
@@ -45,13 +44,13 @@ struct HomeView: View {
                     // Workout Section
                     HStack {
                         Text("Hypertrophy Push Workout")
-                            .font(.headline)
+                            .font(.futuraHeadline())
                             .foregroundColor(.white)
                         
                         Spacer()
                         
                         Text("Templates")
-                            .font(.subheadline)
+                            .font(.futuraSubheadline())
                             .foregroundColor(.gray)
                     }
                     .padding(.horizontal)
@@ -86,19 +85,18 @@ struct CalendarWeekView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("July 2025")
-                .font(.title3)
-                .bold()
+                .font(.futuraTitle3())
                 .foregroundColor(.white)
             
             HStack(spacing: 12) {
                 ForEach(0..<7) { index in
                     VStack(spacing: 8) {
                         Text(daysOfWeek[index])
-                            .font(.caption)
+                            .font(.futuraCaption())
                             .foregroundColor(.gray)
                         
                         Text("\(dates[index])")
-                            .font(.title3)
+                            .font(.futuraTitle3())
                             .foregroundColor(index == 3 ? .black : .white)
                             .frame(width: 40, height: 40)
                             .background(index == 3 ? Color.white : Color.clear)
@@ -119,10 +117,10 @@ struct WorkoutCard: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(exerciseName)
-                    .font(.headline)
+                    .font(.futuraHeadline())
                     .foregroundColor(.white)
                 Text(sets)
-                    .font(.subheadline)
+                    .font(.futuraSubheadline())
                     .foregroundColor(.gray)
             }
             
