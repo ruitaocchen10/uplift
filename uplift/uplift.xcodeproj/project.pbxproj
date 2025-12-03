@@ -10,6 +10,9 @@
 		26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CC2EDF715800B2BE71 /* upliftApp.swift */; };
 		26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CE2EDF715800B2BE71 /* ContentView.swift */; };
 		26AE90D12EDF715C00B2BE71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26AE90D02EDF715C00B2BE71 /* Assets.xcassets */; };
+		26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */; };
+		26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */; };
+		26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90E12EE0A6E900B2BE71 /* HomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +20,9 @@
 		26AE90CC2EDF715800B2BE71 /* upliftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = upliftApp.swift; sourceTree = "<group>"; };
 		26AE90CE2EDF715800B2BE71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		26AE90D02EDF715C00B2BE71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSet.swift; sourceTree = "<group>"; };
+		26AE90E12EE0A6E900B2BE71 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +39,8 @@
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				26AE90E02EE0A6E200B2BE71 /* Views */,
+				26AE90D72EE0A3C100B2BE71 /* Models */,
 				26AE90D02EDF715C00B2BE71 /* Assets.xcassets */,
 				26AE90CE2EDF715800B2BE71 /* ContentView.swift */,
 				26AE90CC2EDF715800B2BE71 /* upliftApp.swift */,
@@ -46,6 +54,23 @@
 				26AE90C92EDF715800B2BE71 /* uplift.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		26AE90D72EE0A3C100B2BE71 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */,
+				26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		26AE90E02EE0A6E200B2BE71 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +147,9 @@
 			files = (
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
+				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
+				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
+				26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
