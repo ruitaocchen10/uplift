@@ -31,6 +31,7 @@ struct ContentView: View {
                 }
         }
         .tint(.white) // Tab icon color when selected
+        .preferredColorScheme(.dark) // Force dark mode
     }
 }
 

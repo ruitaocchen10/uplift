@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E12EE0C12500A041AD /* Font+Extension.swift */; };
+		262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E52EE0C76600A041AD /* WorkoutTemplate.swift */; };
+		262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E72EE0C77700A041AD /* WorkoutSession.swift */; };
+		262113EB2EE0C79600A041AD /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113EA2EE0C79300A041AD /* WorkoutHistory.swift */; };
+		262113ED2EE0C7A500A041AD /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113EC2EE0C7A300A041AD /* UserProfile.swift */; };
+		262113F72EE0CAB600A041AD /* TemplateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F42EE0C94900A041AD /* TemplateViewModel.swift */; };
+		262113F82EE0CABA00A041AD /* WorkoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F52EE0C95F00A041AD /* WorkoutViewModel.swift */; };
+		262113F92EE0CABF00A041AD /* ProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F62EE0C97400A041AD /* ProgressViewModel.swift */; };
+		262113FA2EE0CAC900A041AD /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113EF2EE0C81D00A041AD /* StorageManager.swift */; };
+		262113FB2EE0CAD500A041AD /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113F02EE0C82700A041AD /* UserDefaultsManager.swift */; };
 		26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CC2EDF715800B2BE71 /* upliftApp.swift */; };
 		26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CE2EDF715800B2BE71 /* ContentView.swift */; };
 		26AE90D12EDF715C00B2BE71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26AE90D02EDF715C00B2BE71 /* Assets.xcassets */; };
@@ -18,6 +27,15 @@
 
 /* Begin PBXFileReference section */
 		262113E12EE0C12500A041AD /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
+		262113E52EE0C76600A041AD /* WorkoutTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplate.swift; sourceTree = "<group>"; };
+		262113E72EE0C77700A041AD /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
+		262113EA2EE0C79300A041AD /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
+		262113EC2EE0C7A300A041AD /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		262113EF2EE0C81D00A041AD /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		262113F02EE0C82700A041AD /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		262113F42EE0C94900A041AD /* TemplateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewModel.swift; sourceTree = "<group>"; };
+		262113F52EE0C95F00A041AD /* WorkoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutViewModel.swift; sourceTree = "<group>"; };
+		262113F62EE0C97400A041AD /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
 		26AE90C92EDF715800B2BE71 /* uplift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uplift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AE90CC2EDF715800B2BE71 /* upliftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = upliftApp.swift; sourceTree = "<group>"; };
 		26AE90CE2EDF715800B2BE71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,9 +72,30 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		262113EE2EE0C81700A041AD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				262113EF2EE0C81D00A041AD /* StorageManager.swift */,
+				262113F02EE0C82700A041AD /* UserDefaultsManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		262113F32EE0C93E00A041AD /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				262113F42EE0C94900A041AD /* TemplateViewModel.swift */,
+				262113F52EE0C95F00A041AD /* WorkoutViewModel.swift */,
+				262113F62EE0C97400A041AD /* ProgressViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				262113F32EE0C93E00A041AD /* ViewModels */,
+				262113EE2EE0C81700A041AD /* Services */,
 				262113DE2EE0C10800A041AD /* Utilities */,
 				26AE90E02EE0A6E200B2BE71 /* Views */,
 				26AE90D72EE0A3C100B2BE71 /* Models */,
@@ -80,6 +119,10 @@
 			children = (
 				26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */,
 				26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */,
+				262113E52EE0C76600A041AD /* WorkoutTemplate.swift */,
+				262113E72EE0C77700A041AD /* WorkoutSession.swift */,
+				262113EA2EE0C79300A041AD /* WorkoutHistory.swift */,
+				262113EC2EE0C7A300A041AD /* UserProfile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -164,11 +207,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				262113EB2EE0C79600A041AD /* WorkoutHistory.swift in Sources */,
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
+				262113ED2EE0C7A500A041AD /* UserProfile.swift in Sources */,
+				262113FA2EE0CAC900A041AD /* StorageManager.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
+				262113F82EE0CABA00A041AD /* WorkoutViewModel.swift in Sources */,
 				262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */,
+				262113F92EE0CABF00A041AD /* ProgressViewModel.swift in Sources */,
 				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
+				262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */,
+				262113FB2EE0CAD500A041AD /* UserDefaultsManager.swift in Sources */,
+				262113F72EE0CAB600A041AD /* TemplateViewModel.swift in Sources */,
+				262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */,
 				26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
