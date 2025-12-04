@@ -27,12 +27,32 @@ struct HomeView: View {
         workoutsForSelectedDate.filter { $0.isCompleted }
     }
     
+    private var scheduledWorkouts: [WorkoutSession] {
+        workoutsForSelectedDate.filter { $0.isScheduled }
+    }
+    
     private var inProgressWorkouts: [WorkoutSession] {
-        workoutsForSelectedDate.filter { !$0.isCompleted }
+        workoutsForSelectedDate.filter { $0.isInProgress }
+    }
+    
+    private var notStartedTodayWorkouts: [WorkoutSession] {
+        workoutsForSelectedDate.filter { !$0.isCompleted && $0.isToday && !$0.hasStarted }
     }
     
     private var hasWorkoutsOnSelectedDate: Bool {
         !workoutsForSelectedDate.isEmpty
+    }
+    
+    private var isSelectedDateToday: Bool {
+        Calendar.current.isDateInToday(selectedDate)
+    }
+    
+    private var isSelectedDateFuture: Bool {
+        Calendar.current.startOfDay(for: selectedDate) > Calendar.current.startOfDay(for: Date())
+    }
+    
+    private var isSelectedDatePast: Bool {
+        Calendar.current.startOfDay(for: selectedDate) < Calendar.current.startOfDay(for: Date())
     }
     
     var body: some View {
@@ -60,11 +80,10 @@ struct HomeView: View {
                                 }
                             }
                             
-                            // Show in-progress workouts
-                            if !inProgressWorkouts.isEmpty {
-                                ForEach(inProgressWorkouts) { workout in
-                                    InProgressWorkoutCard(workout: workout) {
-                                        // Find and edit this workout
+                            // Show scheduled workouts (future)
+                            if !scheduledWorkouts.isEmpty {
+                                ForEach(scheduledWorkouts) { workout in
+                                    ScheduledWorkoutCard(workout: workout) {
                                         if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
                                             workoutToEdit = workouts[index]
                                         }
@@ -72,20 +91,47 @@ struct HomeView: View {
                                 }
                             }
                             
-                            // Show template selector for empty dates or add another workout
-                            if !hasWorkoutsOnSelectedDate {
-                                EmptyDateView {
-                                    showingTemplateSelector = true
+                            // Show in-progress workouts
+                            if !inProgressWorkouts.isEmpty {
+                                ForEach(inProgressWorkouts) { workout in
+                                    InProgressWorkoutCard(workout: workout) {
+                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workouts[index]
+                                        }
+                                    }
                                 }
+                            }
+                            
+                            // Show not started today workouts
+                            if !notStartedTodayWorkouts.isEmpty {
+                                ForEach(notStartedTodayWorkouts) { workout in
+                                    NotStartedTodayCard(workout: workout) {
+                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workouts[index]
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Show appropriate empty state or add button
+                            if !hasWorkoutsOnSelectedDate {
+                                EmptyDateView(
+                                    isToday: isSelectedDateToday,
+                                    isFuture: isSelectedDateFuture,
+                                    isPast: isSelectedDatePast,
+                                    onAddWorkout: {
+                                        showingTemplateSelector = true
+                                    }
+                                )
                             } else {
-                                // Allow adding another workout to the same day
+                                // Allow adding another workout
                                 Button(action: {
                                     showingTemplateSelector = true
                                 }) {
                                     HStack {
                                         Image(systemName: "plus.circle.fill")
                                             .font(.futuraTitle3())
-                                        Text("Add Another Workout")
+                                        Text(addWorkoutButtonText)
                                             .font(.futuraHeadline())
                                     }
                                     .foregroundColor(.white)
@@ -97,9 +143,8 @@ struct HomeView: View {
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 20)
                     }
-                    
-                    Spacer()
                 }
                 .padding(.top)
             }
@@ -107,22 +152,11 @@ struct HomeView: View {
                 TemplateSelectionSheet(
                     templates: DummyData.sampleTemplates,
                     selectedDate: selectedDate,
+                    isToday: isSelectedDateToday,
+                    isFuture: isSelectedDateFuture,
+                    isPast: isSelectedDatePast,
                     onTemplateSelected: { template in
-                        // Create a new workout from the template
-                        var newWorkout = WorkoutSession.fromTemplate(template)
-                        newWorkout.date = selectedDate
-                        
-                        // Add to workouts array
-                        workouts.append(newWorkout)
-                        
-                        // Add date to dates with workouts
-                        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
-                        datesWithWorkouts.insert(startOfDay)
-                        
-                        // Open the workout for editing
-                        if let index = workouts.firstIndex(where: { $0.id == newWorkout.id }) {
-                            workoutToEdit = workouts[index]
-                        }
+                        handleTemplateSelection(template)
                     }
                 )
             }
@@ -215,6 +249,16 @@ struct HomeView: View {
     
     // MARK: - Helper Methods
     
+    private var addWorkoutButtonText: String {
+        if isSelectedDateFuture {
+            return "Schedule Another Workout"
+        } else if isSelectedDateToday {
+            return "Add Another Workout"
+        } else {
+            return "Add Another Missing Workout"
+        }
+    }
+    
     private var monthYearString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM yyyy"
@@ -227,6 +271,29 @@ struct HomeView: View {
     
     private func nextWeek() {
         selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
+    }
+    
+    private func handleTemplateSelection(_ template: WorkoutTemplate) {
+        // Create workout from template
+        var newWorkout = WorkoutSession.fromTemplate(template, date: selectedDate)
+        
+        // For past dates, we'll open the logging view and let user fill it in
+        // When they save, it will be marked as completed
+        
+        // Add to workouts array
+        workouts.append(newWorkout)
+        
+        // Add date to dates with workouts
+        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
+        datesWithWorkouts.insert(startOfDay)
+        
+        // For today or past, open workout logging immediately
+        // For future, just save as scheduled
+        if !isSelectedDateFuture {
+            if let index = workouts.firstIndex(where: { $0.id == newWorkout.id }) {
+                workoutToEdit = workouts[index]
+            }
+        }
     }
 }
 
@@ -340,6 +407,52 @@ struct CompletedWorkoutCard: View {
     }
 }
 
+struct ScheduledWorkoutCard: View {
+    let workout: WorkoutSession
+    let onStart: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(workout.templateName ?? "Workout")
+                        .font(.futuraHeadline())
+                        .foregroundColor(.white)
+                    
+                    Text("Scheduled for \(formattedDate)")
+                        .font(.futuraCaption())
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "calendar")
+                    .foregroundColor(.blue)
+                    .font(.futuraTitle3())
+            }
+            
+            Button(action: onStart) {
+                Text("View Workout")
+                    .font(.futuraHeadline())
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+            }
+        }
+        .padding()
+        .background(Color.blue.opacity(0.2))
+        .cornerRadius(12)
+    }
+    
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: workout.date)
+    }
+}
+
 struct InProgressWorkoutCard: View {
     let workout: WorkoutSession
     let onResume: () -> Void
@@ -380,21 +493,94 @@ struct InProgressWorkoutCard: View {
     }
 }
 
+struct NotStartedTodayCard: View {
+    let workout: WorkoutSession
+    let onStart: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(workout.templateName ?? "Workout")
+                        .font(.futuraHeadline())
+                        .foregroundColor(.white)
+                    
+                    Text("Ready to start")
+                        .font(.futuraCaption())
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "play.circle.fill")
+                    .foregroundColor(.white)
+                    .font(.futuraTitle3())
+            }
+            
+            Button(action: onStart) {
+                Text("Start Workout")
+                    .font(.futuraHeadline())
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(Color.white)
+                    .cornerRadius(8)
+            }
+        }
+        .padding()
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(12)
+    }
+}
+
 struct EmptyDateView: View {
+    let isToday: Bool
+    let isFuture: Bool
+    let isPast: Bool
     let onAddWorkout: () -> Void
+    
+    private var buttonText: String {
+        if isFuture {
+            return "Schedule Workout"
+        } else if isToday {
+            return "Add Workout"
+        } else {
+            return "Add Missing Workout"
+        }
+    }
+    
+    private var iconName: String {
+        if isFuture {
+            return "calendar.badge.plus"
+        } else if isPast {
+            return "plus.circle"
+        } else {
+            return "figure.strengthtraining.traditional"
+        }
+    }
+    
+    private var emptyText: String {
+        if isPast {
+            return "Rest day"
+        } else if isFuture {
+            return "No workout scheduled"
+        } else {
+            return "No workout today"
+        }
+    }
     
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "figure.strengthtraining.traditional")
+            Image(systemName: iconName)
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
             
-            Text("No workout on this day")
+            Text(emptyText)
                 .font(.futuraHeadline())
                 .foregroundColor(.gray)
             
             Button(action: onAddWorkout) {
-                Text("Add Workout")
+                Text(buttonText)
                     .font(.futuraHeadline())
                     .foregroundColor(.black)
                     .padding()
@@ -412,6 +598,9 @@ struct EmptyDateView: View {
 struct TemplateSelectionSheet: View {
     let templates: [WorkoutTemplate]
     let selectedDate: Date
+    let isToday: Bool
+    let isFuture: Bool
+    let isPast: Bool
     let onTemplateSelected: (WorkoutTemplate) -> Void
     
     @Environment(\.dismiss) var dismiss
@@ -420,6 +609,16 @@ struct TemplateSelectionSheet: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: selectedDate)
+    }
+    
+    private var titleText: String {
+        if isFuture {
+            return "Schedule Workout"
+        } else if isPast {
+            return "Add Missing Workout"
+        } else {
+            return "Select Template"
+        }
     }
     
     var body: some View {
@@ -440,7 +639,7 @@ struct TemplateSelectionSheet: View {
                                             .font(.futuraHeadline())
                                             .foregroundColor(.white)
                                         
-                                        Text("\(template.totalExercises) exercises • ~\(template.estimatedDuration) min")
+                                        Text("\(template.totalExercises) exercises")
                                             .font(.futuraSubheadline())
                                             .foregroundColor(.gray)
                                     }
@@ -459,7 +658,7 @@ struct TemplateSelectionSheet: View {
                     .padding()
                 }
             }
-            .navigationTitle("Select Template")
+            .navigationTitle(titleText)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

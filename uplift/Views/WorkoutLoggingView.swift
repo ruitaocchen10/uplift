@@ -15,6 +15,11 @@ struct WorkoutLoggingView: View {
     @State private var showingCancelConfirmation = false
     @State private var showingAddExercise = false
     
+    private var shouldAutoComplete: Bool {
+        // Auto-complete if adding a past workout
+        workout.isInPast
+    }
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -142,7 +147,13 @@ struct WorkoutLoggingView: View {
     
     private var finishWorkoutButton: some View {
         Button(action: {
-            showingFinishConfirmation = true
+            if shouldAutoComplete {
+                // For past workouts, auto-mark as completed
+                workout.isCompleted = true
+                dismiss()
+            } else {
+                showingFinishConfirmation = true
+            }
         }) {
             Text("Finish Workout")
                 .font(.futuraHeadline())
@@ -214,7 +225,10 @@ struct ExerciseCard: View {
                     ForEach(Array(exercise.sets.enumerated()), id: \.element.id) { index, set in
                         SetRow(
                             setNumber: index + 1,
-                            set: $exercise.sets[index]
+                            set: $exercise.sets[index],
+                            onDelete: {
+                                deleteSet(at: index)
+                            }
                         )
                     }
                     
@@ -273,6 +287,11 @@ struct ExerciseCard: View {
         )
         exercise.sets.append(newSet)
     }
+    
+    private func deleteSet(at index: Int) {
+        guard exercise.sets.count > 1 else { return } // Keep at least one set
+        exercise.sets.remove(at: index)
+    }
 }
 
 // MARK: - Set Row
@@ -280,8 +299,10 @@ struct ExerciseCard: View {
 struct SetRow: View {
     let setNumber: Int
     @Binding var set: WorkoutSet
+    let onDelete: () -> Void
     
     @FocusState private var focusedField: Field?
+    @State private var showingDeleteConfirmation = false
     
     enum Field {
         case weight, reps
@@ -362,6 +383,23 @@ struct SetRow: View {
                 Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundColor(set.isCompleted ? .green : .gray)
                     .font(.futuraTitle3())
+            }
+            
+            // Delete set button
+            Button(action: {
+                showingDeleteConfirmation = true
+            }) {
+                Image(systemName: "trash")
+                    .foregroundColor(.red)
+                    .font(.futuraBody())
+            }
+            .alert("Delete Set?", isPresented: $showingDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    onDelete()
+                }
+            } message: {
+                Text("Remove this set from the exercise?")
             }
         }
         .padding(.horizontal)
@@ -462,6 +500,7 @@ struct AddExerciseSheet: View {
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.bottom, 20)
                     }
                 }
             }

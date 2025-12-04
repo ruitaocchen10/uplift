@@ -29,7 +29,8 @@ struct WorkoutSession: Identifiable {
         self.notes = notes
     }
     
-    // UI helper properties
+    // MARK: - UI Helper Properties
+    
     var totalVolume: Double {
         exercises.reduce(0) { $0 + $1.totalVolume }
     }
@@ -49,8 +50,35 @@ struct WorkoutSession: Identifiable {
         return Double(completedSets) / Double(totalSets)
     }
     
-    // Initialize from a template
-    static func fromTemplate(_ template: WorkoutTemplate) -> WorkoutSession {
+    // MARK: - Workout State Helpers
+    
+    var isInFuture: Bool {
+        Calendar.current.startOfDay(for: date) > Calendar.current.startOfDay(for: Date())
+    }
+    
+    var isToday: Bool {
+        Calendar.current.isDateInToday(date)
+    }
+    
+    var isInPast: Bool {
+        Calendar.current.startOfDay(for: date) < Calendar.current.startOfDay(for: Date())
+    }
+    
+    var isScheduled: Bool {
+        !isCompleted && isInFuture
+    }
+    
+    var isInProgress: Bool {
+        !isCompleted && (isToday || isInPast) && completedSets > 0
+    }
+    
+    var hasStarted: Bool {
+        completedSets > 0
+    }
+    
+    // MARK: - Initialize from Template
+    
+    static func fromTemplate(_ template: WorkoutTemplate, date: Date = Date()) -> WorkoutSession {
         let exercises = template.exercises.map { templateExercise in
             let sets = (0..<templateExercise.targetSets).map { _ in
                 WorkoutSet()
@@ -63,7 +91,7 @@ struct WorkoutSession: Identifiable {
         
         return WorkoutSession(
             templateName: template.name,
-            date: Date(),
+            date: date,
             exercises: exercises
         )
     }
