@@ -12,14 +12,15 @@ struct HomeView: View {
     @State private var showingTemplateSelector = false
     @State private var showingFullCalendar = false
     @State private var showingWorkoutDetail: WorkoutSession?
+    @State private var workoutToEdit: WorkoutSession?
     
-    // DUMMY DATA - Replace with real data later
-    private let dummyWorkouts = DummyData.sampleWorkouts
-    private let dummyDatesWithWorkouts = DummyData.datesWithWorkouts
+    // MUTABLE STATE - Can now add/remove workouts
+    @State private var workouts: [WorkoutSession] = DummyData.sampleWorkouts
+    @State private var datesWithWorkouts: Set<Date> = DummyData.datesWithWorkouts
     
     // Filter workouts for selected date
     private var workoutsForSelectedDate: [WorkoutSession] {
-        dummyWorkouts.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+        workouts.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
     }
     
     private var completedWorkouts: [WorkoutSession] {
@@ -63,7 +64,10 @@ struct HomeView: View {
                             if !inProgressWorkouts.isEmpty {
                                 ForEach(inProgressWorkouts) { workout in
                                     InProgressWorkoutCard(workout: workout) {
-                                        // TODO: Resume workout navigation
+                                        // Find and edit this workout
+                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workouts[index]
+                                        }
                                     }
                                 }
                             }
@@ -104,8 +108,21 @@ struct HomeView: View {
                     templates: DummyData.sampleTemplates,
                     selectedDate: selectedDate,
                     onTemplateSelected: { template in
-                        // TODO: Start workout from template
-                        print("Selected template: \(template.name)")
+                        // Create a new workout from the template
+                        var newWorkout = WorkoutSession.fromTemplate(template)
+                        newWorkout.date = selectedDate
+                        
+                        // Add to workouts array
+                        workouts.append(newWorkout)
+                        
+                        // Add date to dates with workouts
+                        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
+                        datesWithWorkouts.insert(startOfDay)
+                        
+                        // Open the workout for editing
+                        if let index = workouts.firstIndex(where: { $0.id == newWorkout.id }) {
+                            workoutToEdit = workouts[index]
+                        }
                     }
                 )
             }
@@ -114,6 +131,13 @@ struct HomeView: View {
             }
             .sheet(item: $showingWorkoutDetail) { workout in
                 WorkoutDetailSheet(workout: workout)
+            }
+            .fullScreenCover(item: $workoutToEdit) { workout in
+                if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
+                    NavigationStack {
+                        WorkoutLoggingView(workout: $workouts[index])
+                    }
+                }
             }
         }
     }
@@ -173,7 +197,7 @@ struct HomeView: View {
                 
                 CalendarWeekView(
                     selectedDate: $selectedDate,
-                    datesWithWorkouts: dummyDatesWithWorkouts
+                    datesWithWorkouts: datesWithWorkouts
                 )
                 
                 Spacer()

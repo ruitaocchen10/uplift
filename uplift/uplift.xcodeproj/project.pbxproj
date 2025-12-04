@@ -12,6 +12,11 @@
 		262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E72EE0C77700A041AD /* WorkoutSession.swift */; };
 		262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */; };
 		262479342EE1D44A0029083B /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479332EE1D4470029083B /* DummyData.swift */; };
+		262479362EE1DB330029083B /* TemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479352EE1DB2F0029083B /* TemplatesView.swift */; };
+		262479382EE1DB510029083B /* CreateEditTemplateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */; };
+		269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */; };
+		269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F52EE1E60500CEFB6F /* ProgressView.swift */; };
+		269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */; };
 		26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CC2EDF715800B2BE71 /* upliftApp.swift */; };
 		26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90CE2EDF715800B2BE71 /* ContentView.swift */; };
 		26AE90D12EDF715C00B2BE71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26AE90D02EDF715C00B2BE71 /* Assets.xcassets */; };
@@ -26,6 +31,11 @@
 		262113E72EE0C77700A041AD /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
 		262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLoggingView.swift; sourceTree = "<group>"; };
 		262479332EE1D4470029083B /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
+		262479352EE1DB2F0029083B /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
+		262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditTemplateView.swift; sourceTree = "<group>"; };
+		269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
+		269686F52EE1E60500CEFB6F /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCalculations.swift; sourceTree = "<group>"; };
 		26AE90C92EDF715800B2BE71 /* uplift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uplift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AE90CC2EDF715800B2BE71 /* upliftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = upliftApp.swift; sourceTree = "<group>"; };
 		26AE90CE2EDF715800B2BE71 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,6 +59,7 @@
 		262113DE2EE0C10800A041AD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */,
 				262113DF2EE0C11100A041AD /* Extensions */,
 			);
 			path = Utilities;
@@ -99,7 +110,11 @@
 			isa = PBXGroup;
 			children = (
 				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
+				269686F52EE1E60500CEFB6F /* ProgressView.swift */,
+				269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */,
 				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
+				262479352EE1DB2F0029083B /* TemplatesView.swift */,
+				262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -179,13 +194,18 @@
 				262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */,
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
+				269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */,
 				262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */,
+				262479382EE1DB510029083B /* CreateEditTemplateView.swift in Sources */,
 				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
 				262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */,
 				262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */,
 				26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */,
+				269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */,
+				269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */,
 				262479342EE1D44A0029083B /* DummyData.swift in Sources */,
+				262479362EE1DB330029083B /* TemplatesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

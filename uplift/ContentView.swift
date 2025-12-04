@@ -14,17 +14,13 @@ struct ContentView: View {
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
-            
-            Text("Workout View") // TODO: Build WorkoutLoggingView
-                .font(.futuraBody())
+            TemplatesView()
                 .tabItem {
-                    Label("Workout", systemImage: "figure.strengthtraining.traditional")
+                    Label("Templates", systemImage: "list.clipboard.fill")
                 }
-            
-            Text("Profile") // TODO: Build ProfileView
-                .font(.futuraBody())
+            ProgressView()
                 .tabItem {
-                    Label("You", systemImage: "person.circle.fill")
+                    Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
                 }
         }
         .tint(.white)
