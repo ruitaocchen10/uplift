@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import SwiftData
 
-struct WorkoutSession: Identifiable {
-    let id = UUID()
+@Model
+class WorkoutSession {
+    @Attribute(.unique) var id: UUID
     var templateName: String?
     var date: Date
-    var exercises: [Exercise]
+    @Relationship(deleteRule: .cascade) var exercises: [Exercise]
     var isCompleted: Bool
     var notes: String?
     
@@ -22,6 +24,7 @@ struct WorkoutSession: Identifiable {
         isCompleted: Bool = false,
         notes: String? = nil
     ) {
+        self.id = UUID()
         self.templateName = templateName
         self.date = date
         self.exercises = exercises

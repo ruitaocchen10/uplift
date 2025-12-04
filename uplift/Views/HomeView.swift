@@ -14,13 +14,11 @@ struct HomeView: View {
     @State private var showingWorkoutDetail: WorkoutSession?
     @State private var workoutToEdit: WorkoutSession?
     
-    // MUTABLE STATE - Can now add/remove workouts
-    @State private var workouts: [WorkoutSession] = DummyData.sampleWorkouts
-    @State private var datesWithWorkouts: Set<Date> = DummyData.datesWithWorkouts
+    @EnvironmentObject var workoutManager: WorkoutManager
     
     // Filter workouts for selected date
     private var workoutsForSelectedDate: [WorkoutSession] {
-        workouts.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+        workoutManager.workouts(for: selectedDate)
     }
     
     private var completedWorkouts: [WorkoutSession] {
@@ -55,6 +53,10 @@ struct HomeView: View {
         Calendar.current.startOfDay(for: selectedDate) < Calendar.current.startOfDay(for: Date())
     }
     
+    private var datesWithWorkouts: Set<Date> {
+        workoutManager.workoutDates()
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -84,8 +86,8 @@ struct HomeView: View {
                             if !scheduledWorkouts.isEmpty {
                                 ForEach(scheduledWorkouts) { workout in
                                     ScheduledWorkoutCard(workout: workout) {
-                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workouts[index]
+                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workoutManager.workouts[index]
                                         }
                                     }
                                 }
@@ -95,8 +97,8 @@ struct HomeView: View {
                             if !inProgressWorkouts.isEmpty {
                                 ForEach(inProgressWorkouts) { workout in
                                     InProgressWorkoutCard(workout: workout) {
-                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workouts[index]
+                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workoutManager.workouts[index]
                                         }
                                     }
                                 }
@@ -106,8 +108,8 @@ struct HomeView: View {
                             if !notStartedTodayWorkouts.isEmpty {
                                 ForEach(notStartedTodayWorkouts) { workout in
                                     NotStartedTodayCard(workout: workout) {
-                                        if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workouts[index]
+                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                            workoutToEdit = workoutManager.workouts[index]
                                         }
                                     }
                                 }
@@ -150,7 +152,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingTemplateSelector) {
                 TemplateSelectionSheet(
-                    templates: DummyData.sampleTemplates,
+                    templates: workoutManager.templates,
                     selectedDate: selectedDate,
                     isToday: isSelectedDateToday,
                     isFuture: isSelectedDateFuture,
@@ -167,9 +169,9 @@ struct HomeView: View {
                 WorkoutDetailSheet(workout: workout)
             }
             .fullScreenCover(item: $workoutToEdit) { workout in
-                if let index = workouts.firstIndex(where: { $0.id == workout.id }) {
+                if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
                     NavigationStack {
-                        WorkoutLoggingView(workout: $workouts[index])
+                        WorkoutLoggingView(workout: workoutManager.workouts[index])
                     }
                 }
             }
@@ -272,26 +274,15 @@ struct HomeView: View {
     private func nextWeek() {
         selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
     }
-    
+
     private func handleTemplateSelection(_ template: WorkoutTemplate) {
-        // Create workout from template
-        var newWorkout = WorkoutSession.fromTemplate(template, date: selectedDate)
-        
-        // For past dates, we'll open the logging view and let user fill it in
-        // When they save, it will be marked as completed
-        
-        // Add to workouts array
-        workouts.append(newWorkout)
-        
-        // Add date to dates with workouts
-        let startOfDay = Calendar.current.startOfDay(for: selectedDate)
-        datesWithWorkouts.insert(startOfDay)
+        let newWorkout = WorkoutSession.fromTemplate(template, date: selectedDate)
+        workoutManager.addWorkout(newWorkout)
         
         // For today or past, open workout logging immediately
-        // For future, just save as scheduled
         if !isSelectedDateFuture {
-            if let index = workouts.firstIndex(where: { $0.id == newWorkout.id }) {
-                workoutToEdit = workouts[index]
+            if let index = workoutManager.workouts.firstIndex(where: { $0.id == newWorkout.id }) {
+                workoutToEdit = workoutManager.workouts[index]
             }
         }
     }

@@ -6,17 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct WorkoutLoggingView: View {
-    @Binding var workout: WorkoutSession
+    var workout: WorkoutSession
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     
     @State private var showingFinishConfirmation = false
     @State private var showingCancelConfirmation = false
     @State private var showingAddExercise = false
     
     private var shouldAutoComplete: Bool {
-        // Auto-complete if adding a past workout
         workout.isInPast
     }
     
@@ -31,11 +32,13 @@ struct WorkoutLoggingView: View {
                 // Exercise List
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(Array(workout.exercises.enumerated()), id: \.element.id) { index, exercise in
-                            ExerciseCard(
-                                exercise: $workout.exercises[index],
+                        ForEach(workout.exercises) { exercise in
+                            ExerciseCardView(
+                                exercise: exercise,
                                 onDelete: {
-                                    deleteExercise(at: index)
+                                    if let index = workout.exercises.firstIndex(where: { $0.id == exercise.id }) {
+                                        workout.exercises.remove(at: index)
+                                    }
                                 }
                             )
                         }
@@ -148,8 +151,8 @@ struct WorkoutLoggingView: View {
     private var finishWorkoutButton: some View {
         Button(action: {
             if shouldAutoComplete {
-                // For past workouts, auto-mark as completed
                 workout.isCompleted = true
+                try? modelContext.save()
                 dismiss()
             } else {
                 showingFinishConfirmation = true
@@ -169,33 +172,31 @@ struct WorkoutLoggingView: View {
             Button("Cancel", role: .cancel) {}
             Button("Finish") {
                 workout.isCompleted = true
+                try? modelContext.save()
                 dismiss()
             }
         } message: {
             Text("You completed \(workout.completedSets) of \(workout.totalSets) sets.")
         }
     }
-    
-    // MARK: - Helper Methods
-    
-    private func deleteExercise(at index: Int) {
-        workout.exercises.remove(at: index)
-    }
 }
 
-// MARK: - Exercise Card
+// MARK: - Exercise Card View
 
-struct ExerciseCard: View {
-    @Binding var exercise: Exercise
+struct ExerciseCardView: View {
+    var exercise: Exercise
     let onDelete: () -> Void
+    @Environment(\.modelContext) private var modelContext
     
     @State private var showingDeleteConfirmation = false
+    @State private var refreshID = UUID()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Exercise Header
             Button(action: {
                 exercise.isExpanded.toggle()
+                refreshID = UUID()
             }) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -223,18 +224,27 @@ struct ExerciseCard: View {
                 VStack(spacing: 8) {
                     // Set rows
                     ForEach(Array(exercise.sets.enumerated()), id: \.element.id) { index, set in
-                        SetRow(
+                        SetRowView(
                             setNumber: index + 1,
-                            set: $exercise.sets[index],
+                            set: set,
                             onDelete: {
-                                deleteSet(at: index)
+                                guard exercise.sets.count > 1 else { return }
+                                exercise.sets.remove(at: index)
+                                refreshID = UUID()
                             }
                         )
                     }
                     
                     // Add Set Button
                     Button(action: {
-                        addSet()
+                        let lastSet = exercise.sets.last
+                        let newSet = WorkoutSet(
+                            weight: lastSet?.weight ?? 0,
+                            reps: lastSet?.reps ?? 0,
+                            isCompleted: false
+                        )
+                        exercise.sets.append(newSet)
+                        refreshID = UUID()
                     }) {
                         HStack {
                             Image(systemName: "plus.circle.fill")
@@ -266,6 +276,7 @@ struct ExerciseCard: View {
                 .background(Color.gray.opacity(0.2))
             }
         }
+        .id(refreshID)
         .cornerRadius(12)
         .padding(.horizontal)
         .alert("Delete Exercise?", isPresented: $showingDeleteConfirmation) {
@@ -277,32 +288,30 @@ struct ExerciseCard: View {
             Text("This will remove \(exercise.name) from your workout.")
         }
     }
-    
-    private func addSet() {
-        let lastSet = exercise.sets.last
-        let newSet = WorkoutSet(
-            weight: lastSet?.weight ?? 0,
-            reps: lastSet?.reps ?? 0,
-            isCompleted: false
-        )
-        exercise.sets.append(newSet)
-    }
-    
-    private func deleteSet(at index: Int) {
-        guard exercise.sets.count > 1 else { return } // Keep at least one set
-        exercise.sets.remove(at: index)
-    }
 }
 
-// MARK: - Set Row
+// MARK: - Set Row View
 
-struct SetRow: View {
+struct SetRowView: View {
     let setNumber: Int
-    @Binding var set: WorkoutSet
+    var set: WorkoutSet
     let onDelete: () -> Void
+    @Environment(\.modelContext) private var modelContext
     
     @FocusState private var focusedField: Field?
     @State private var showingDeleteConfirmation = false
+    @State private var localWeight: Double
+    @State private var localReps: Int
+    @State private var localCompleted: Bool
+    
+    init(setNumber: Int, set: WorkoutSet, onDelete: @escaping () -> Void) {
+        self.setNumber = setNumber
+        self.set = set
+        self.onDelete = onDelete
+        _localWeight = State(initialValue: set.weight)
+        _localReps = State(initialValue: set.reps)
+        _localCompleted = State(initialValue: set.isCompleted)
+    }
     
     enum Field {
         case weight, reps
@@ -319,23 +328,28 @@ struct SetRow: View {
             // Weight input with steppers
             HStack(spacing: 4) {
                 Button(action: {
-                    set.weight = max(0, set.weight - 5)
+                    localWeight = max(0, localWeight - 5)
+                    set.weight = localWeight
                 }) {
                     Image(systemName: "minus.circle.fill")
                         .foregroundColor(.white)
                         .font(.futuraBody())
                 }
                 
-                TextField("0", value: $set.weight, format: .number)
+                TextField("0", value: $localWeight, format: .number)
                     .font(.futuraBody())
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .keyboardType(.numberPad)
                     .focused($focusedField, equals: .weight)
                     .frame(width: 50)
+                    .onChange(of: localWeight) { oldValue, newValue in
+                        set.weight = newValue
+                    }
                 
                 Button(action: {
-                    set.weight += 5
+                    localWeight += 5
+                    set.weight = localWeight
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .foregroundColor(.white)
@@ -351,23 +365,28 @@ struct SetRow: View {
             // Reps input with steppers
             HStack(spacing: 4) {
                 Button(action: {
-                    set.reps = max(0, set.reps - 1)
+                    localReps = max(0, localReps - 1)
+                    set.reps = localReps
                 }) {
                     Image(systemName: "minus.circle.fill")
                         .foregroundColor(.white)
                         .font(.futuraBody())
                 }
                 
-                TextField("0", value: $set.reps, format: .number)
+                TextField("0", value: $localReps, format: .number)
                     .font(.futuraBody())
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .keyboardType(.numberPad)
                     .focused($focusedField, equals: .reps)
                     .frame(width: 40)
+                    .onChange(of: localReps) { oldValue, newValue in
+                        set.reps = newValue
+                    }
                 
                 Button(action: {
-                    set.reps += 1
+                    localReps += 1
+                    set.reps = localReps
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .foregroundColor(.white)
@@ -378,10 +397,11 @@ struct SetRow: View {
             
             // Completion checkmark
             Button(action: {
-                set.isCompleted.toggle()
+                localCompleted.toggle()
+                set.isCompleted = localCompleted
             }) {
-                Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(set.isCompleted ? .green : .gray)
+                Image(systemName: localCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(localCompleted ? .green : .gray)
                     .font(.futuraTitle3())
             }
             
@@ -404,7 +424,7 @@ struct SetRow: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(set.isCompleted ? Color.green.opacity(0.1) : Color.clear)
+        .background(localCompleted ? Color.green.opacity(0.1) : Color.clear)
     }
 }
 
@@ -416,7 +436,6 @@ struct AddExerciseSheet: View {
     
     @State private var searchText = ""
     
-    // Common exercises list
     private let commonExercises = [
         "Bench Press", "Squat", "Deadlift", "Overhead Press",
         "Barbell Row", "Pull-ups", "Dips", "Bicep Curls",
@@ -438,7 +457,6 @@ struct AddExerciseSheet: View {
                 Color.black.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Search bar
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
@@ -453,7 +471,6 @@ struct AddExerciseSheet: View {
                     .cornerRadius(12)
                     .padding()
                     
-                    // Exercise list
                     ScrollView {
                         VStack(spacing: 8) {
                             ForEach(filteredExercises, id: \.self) { exercise in
@@ -465,9 +482,7 @@ struct AddExerciseSheet: View {
                                         Text(exercise)
                                             .font(.futuraBody())
                                             .foregroundColor(.white)
-                                        
                                         Spacer()
-                                        
                                         Image(systemName: "plus.circle")
                                             .foregroundColor(.white)
                                     }
@@ -477,7 +492,6 @@ struct AddExerciseSheet: View {
                                 }
                             }
                             
-                            // Custom exercise option
                             if !searchText.isEmpty && !commonExercises.contains(searchText) {
                                 Button(action: {
                                     onAdd(searchText)
@@ -487,9 +501,7 @@ struct AddExerciseSheet: View {
                                         Text("Add \"\(searchText)\"")
                                             .font(.futuraBody())
                                             .foregroundColor(.white)
-                                        
                                         Spacer()
-                                        
                                         Image(systemName: "plus.circle.fill")
                                             .foregroundColor(.green)
                                     }
@@ -519,5 +531,5 @@ struct AddExerciseSheet: View {
 }
 
 #Preview {
-    WorkoutLoggingView(workout: .constant(DummyData.activeWorkout))
+    WorkoutLoggingView(workout: DummyData.activeWorkout)
 }

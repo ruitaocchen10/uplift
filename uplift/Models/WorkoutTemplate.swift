@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import SwiftData
 
-struct WorkoutTemplate: Identifiable {
-    let id = UUID()
+@Model
+class WorkoutTemplate {
+    @Attribute(.unique) var id: UUID
     var name: String
-    var exercises: [TemplateExercise]
+    @Relationship(deleteRule: .cascade) var exercises: [TemplateExercise]
     
     init(name: String, exercises: [TemplateExercise] = []) {
+        self.id = UUID()
         self.name = name
         self.exercises = exercises
     }
@@ -29,8 +32,9 @@ struct WorkoutTemplate: Identifiable {
     }
 }
 
-struct TemplateExercise: Identifiable {
-    let id = UUID()
+@Model
+class TemplateExercise {
+    @Attribute(.unique) var id: UUID
     var name: String
     var targetSets: Int
     var targetRepsMin: Int
@@ -38,6 +42,7 @@ struct TemplateExercise: Identifiable {
     var notes: String?
     
     init(name: String, targetSets: Int, targetRepsMin: Int, targetRepsMax: Int, notes: String? = nil) {
+        self.id = UUID()
         self.name = name
         self.targetSets = targetSets
         self.targetRepsMin = targetRepsMin

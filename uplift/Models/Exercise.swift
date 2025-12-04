@@ -6,14 +6,17 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Exercise: Identifiable {
-    let id = UUID()
+@Model
+class Exercise {
+    @Attribute(.unique) var id: UUID
     var name: String
-    var sets: [WorkoutSet]
-    var isExpanded: Bool = false
+    @Relationship(deleteRule: .cascade) var sets: [WorkoutSet]
+    var isExpanded: Bool
     
     init(name: String, sets: [WorkoutSet] = [], isExpanded: Bool = false) {
+        self.id = UUID()
         self.name = name
         self.sets = sets
         self.isExpanded = isExpanded

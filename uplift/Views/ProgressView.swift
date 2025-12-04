@@ -9,16 +9,16 @@ import SwiftUI
 
 struct ProgressView: View {
     // DUMMY DATA - Using workouts from HomeView
-    @State private var workouts: [WorkoutSession] = DummyData.sampleWorkouts
+    @EnvironmentObject var workoutManager: WorkoutManager
     @State private var selectedMonth: Date = Date()
     @State private var selectedExercise: ExerciseStats?
     
     private var workoutDates: Set<Date> {
-        ProgressCalculations.getWorkoutDates(from: workouts)
+        workoutManager.workoutDates()
     }
-    
+
     private var exerciseStats: [ExerciseStats] {
-        ProgressCalculations.calculateExerciseStats(from: workouts)
+        workoutManager.exerciseStats()
     }
     
     var body: some View {

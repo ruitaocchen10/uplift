@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct TemplatesView: View {
-    @State private var templates: [WorkoutTemplate] = DummyData.sampleTemplates
+    @EnvironmentObject var workoutManager: WorkoutManager
     @State private var favoriteTemplateIds: Set<UUID> = []
     @State private var showingCreateTemplate = false
     @State private var templateToEdit: WorkoutTemplate?
     
     private var favoriteTemplates: [WorkoutTemplate] {
-        templates.filter { favoriteTemplateIds.contains($0.id) }
+        workoutManager.templates.filter { favoriteTemplateIds.contains($0.id) }
     }
-    
+
     private var otherTemplates: [WorkoutTemplate] {
-        templates.filter { !favoriteTemplateIds.contains($0.id) }
+        workoutManager.templates.filter { !favoriteTemplateIds.contains($0.id) }
     }
     
     var body: some View {
@@ -26,7 +26,7 @@ struct TemplatesView: View {
             ZStack {
                 Color.black.ignoresSafeArea()
                 
-                if templates.isEmpty {
+                if workoutManager.templates.isEmpty {
                     // Empty State
                     emptyStateView
                 } else {
@@ -104,16 +104,20 @@ struct TemplatesView: View {
                 CreateEditTemplateView(
                     template: nil,
                     onSave: { newTemplate in
-                        templates.append(newTemplate)
+                        workoutManager.addTemplate(newTemplate)
                     }
                 )
             }
             .sheet(item: $templateToEdit) { template in
-                if let index = templates.firstIndex(where: { $0.id == template.id }) {
+                if let index = workoutManager.templates.firstIndex(where: { $0.id == template.id }) {
                     CreateEditTemplateView(
-                        template: templates[index],
+                        template: workoutManager.templates[index],
                         onSave: { updatedTemplate in
-                            templates[index] = updatedTemplate
+                            // Update the template in place
+                            let original = workoutManager.templates[index]
+                            original.name = updatedTemplate.name
+                            original.exercises = updatedTemplate.exercises
+                            workoutManager.updateTemplate(original)
                         }
                     )
                 }
@@ -166,7 +170,7 @@ struct TemplatesView: View {
     }
     
     private func deleteTemplate(_ template: WorkoutTemplate) {
-        templates.removeAll { $0.id == template.id }
+        workoutManager.deleteTemplate(template)
         favoriteTemplateIds.remove(template.id)
     }
 }
