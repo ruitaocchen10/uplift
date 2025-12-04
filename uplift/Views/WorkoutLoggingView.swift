@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WorkoutLoggingView: View {
-    @StateObject private var viewModel: WorkoutViewModel
+    @State private var currentSession: WorkoutSession
     @Environment(\.dismiss) var dismiss
     
     @State private var showingFinishConfirmation = false
@@ -16,8 +16,8 @@ struct WorkoutLoggingView: View {
     @State private var showingAddExercise = false
     @State private var editingExercise: Exercise?
     
-    init(viewModel: WorkoutViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    init(session: WorkoutSession = DummyData.activeWorkout) {
+        _currentSession = State(initialValue: session)
     }
     
     var body: some View {
@@ -29,62 +29,54 @@ struct WorkoutLoggingView: View {
                 headerView
                 
                 // Exercise List
-                if let session = viewModel.currentSession {
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            ForEach(session.exercises) { exercise in
-                                ExerciseCard(
-                                    exercise: exercise,
-                                    onToggleExpansion: {
-                                        viewModel.toggleExerciseExpansion(exercise.id)
-                                    },
-                                    onUpdateSet: { set in
-                                        viewModel.updateSet(set, in: exercise.id)
-                                    },
-                                    onAddSet: {
-                                        viewModel.addSet(to: exercise.id)
-                                    },
-                                    onDeleteSet: { setId in
-                                        viewModel.deleteSet(setId, from: exercise.id)
-                                    },
-                                    onToggleSetCompletion: { setId in
-                                        viewModel.toggleSetCompletion(setId, in: exercise.id)
-                                    },
-                                    onDelete: {
-                                        viewModel.deleteExercise(exercise)
-                                    }
-                                )
-                            }
-                            .onMove { source, destination in
-                                moveExercise(from: source, to: destination)
-                            }
-                            
-                            // Add Exercise Button
-                            Button(action: {
-                                showingAddExercise = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "plus.circle.fill")
-                                        .font(.futuraTitle3())
-                                    Text("Add Exercise")
-                                        .font(.futuraHeadline())
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(Array(currentSession.exercises.enumerated()), id: \.element.id) { index, exercise in
+                            ExerciseCard(
+                                exercise: exercise,
+                                onToggleExpansion: {
+                                    toggleExerciseExpansion(exercise.id)
+                                },
+                                onUpdateSet: { set in
+                                    updateSet(set, in: exercise.id)
+                                },
+                                onAddSet: {
+                                    addSet(to: exercise.id)
+                                },
+                                onDeleteSet: { setId in
+                                    deleteSet(setId, from: exercise.id)
+                                },
+                                onToggleSetCompletion: { setId in
+                                    toggleSetCompletion(setId, in: exercise.id)
+                                },
+                                onDelete: {
+                                    deleteExercise(exercise)
                                 }
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
-                            }
-                            .padding(.horizontal)
+                            )
                         }
-                        .padding(.vertical)
+                        .onMove { source, destination in
+                            moveExercise(from: source, to: destination)
+                        }
+                        
+                        // Add Exercise Button
+                        Button(action: {
+                            showingAddExercise = true
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.futuraTitle3())
+                                Text("Add Exercise")
+                                    .font(.futuraHeadline())
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(12)
+                        }
+                        .padding(.horizontal)
                     }
-                } else {
-                    Spacer()
-                    Text("No active workout")
-                        .font(.futuraBody())
-                        .foregroundColor(.gray)
-                    Spacer()
+                    .padding(.vertical)
                 }
                 
                 // Finish Workout Button
@@ -99,7 +91,7 @@ struct WorkoutLoggingView: View {
                     sets: [WorkoutSet()],
                     isExpanded: true
                 )
-                viewModel.addExercise(newExercise)
+                addExercise(newExercise)
             }
         }
     }
@@ -111,7 +103,6 @@ struct WorkoutLoggingView: View {
             HStack {
                 Button(action: {
                     // Just save and exit - workout remains in progress
-                    viewModel.pauseWorkout()
                     dismiss()
                 }) {
                     Image(systemName: "chevron.left")
@@ -122,15 +113,13 @@ struct WorkoutLoggingView: View {
                 Spacer()
                 
                 VStack(spacing: 4) {
-                    Text(viewModel.currentSession?.templateName ?? "Workout")
+                    Text(currentSession.templateName ?? "Workout")
                         .font(.futuraHeadline())
                         .foregroundColor(.white)
                     
-                    if let session = viewModel.currentSession {
-                        Text("\(session.completedSets)/\(session.totalSets) sets")
-                            .font(.futuraCaption())
-                            .foregroundColor(.gray)
-                    }
+                    Text("\(currentSession.completedSets)/\(currentSession.totalSets) sets")
+                        .font(.futuraCaption())
+                        .foregroundColor(.gray)
                 }
                 
                 Spacer()
@@ -147,28 +136,25 @@ struct WorkoutLoggingView: View {
             .padding(.top, 8)
             
             // Progress bar
-            if let session = viewModel.currentSession {
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(height: 4)
-                        
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(width: geometry.size.width * session.progressPercentage, height: 4)
-                    }
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(height: 4)
+                    
+                    Rectangle()
+                        .fill(Color.white)
+                        .frame(width: geometry.size.width * currentSession.progressPercentage, height: 4)
                 }
-                .frame(height: 4)
-                .padding(.horizontal)
             }
+            .frame(height: 4)
+            .padding(.horizontal)
         }
         .padding(.bottom, 12)
         .background(Color.black)
         .alert("Discard Workout?", isPresented: $showingCancelConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Discard Workout", role: .destructive) {
-                viewModel.cancelWorkout()
                 dismiss()
             }
         } message: {
@@ -195,23 +181,64 @@ struct WorkoutLoggingView: View {
         .alert("Finish Workout?", isPresented: $showingFinishConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Finish") {
-                viewModel.finishWorkout()
+                currentSession.isCompleted = true
                 dismiss()
             }
         } message: {
-            if let session = viewModel.currentSession {
-                Text("You completed \(session.completedSets) of \(session.totalSets) sets.")
-            }
+            Text("You completed \(currentSession.completedSets) of \(currentSession.totalSets) sets.")
         }
     }
     
     // MARK: - Helper Methods
     
+    private func toggleExerciseExpansion(_ exerciseId: UUID) {
+        if let index = currentSession.exercises.firstIndex(where: { $0.id == exerciseId }) {
+            currentSession.exercises[index].isExpanded.toggle()
+        }
+    }
+    
+    private func updateSet(_ set: WorkoutSet, in exerciseId: UUID) {
+        if let exerciseIndex = currentSession.exercises.firstIndex(where: { $0.id == exerciseId }),
+           let setIndex = currentSession.exercises[exerciseIndex].sets.firstIndex(where: { $0.id == set.id }) {
+            currentSession.exercises[exerciseIndex].sets[setIndex] = set
+        }
+    }
+    
+    private func addSet(to exerciseId: UUID) {
+        if let index = currentSession.exercises.firstIndex(where: { $0.id == exerciseId }) {
+            let lastSet = currentSession.exercises[index].sets.last
+            let newSet = WorkoutSet(
+                weight: lastSet?.weight ?? 0,
+                reps: lastSet?.reps ?? 0,
+                isCompleted: false
+            )
+            currentSession.exercises[index].sets.append(newSet)
+        }
+    }
+    
+    private func deleteSet(_ setId: UUID, from exerciseId: UUID) {
+        if let exerciseIndex = currentSession.exercises.firstIndex(where: { $0.id == exerciseId }) {
+            currentSession.exercises[exerciseIndex].sets.removeAll { $0.id == setId }
+        }
+    }
+    
+    private func toggleSetCompletion(_ setId: UUID, in exerciseId: UUID) {
+        if let exerciseIndex = currentSession.exercises.firstIndex(where: { $0.id == exerciseId }),
+           let setIndex = currentSession.exercises[exerciseIndex].sets.firstIndex(where: { $0.id == setId }) {
+            currentSession.exercises[exerciseIndex].sets[setIndex].isCompleted.toggle()
+        }
+    }
+    
+    private func addExercise(_ exercise: Exercise) {
+        currentSession.exercises.append(exercise)
+    }
+    
+    private func deleteExercise(_ exercise: Exercise) {
+        currentSession.exercises.removeAll { $0.id == exercise.id }
+    }
+    
     private func moveExercise(from source: IndexSet, to destination: Int) {
-        guard var session = viewModel.currentSession else { return }
-        session.exercises.move(fromOffsets: source, toOffset: destination)
-        viewModel.currentSession = session
-        StorageManager.shared.updateWorkoutSession(session)
+        currentSession.exercises.move(fromOffsets: source, toOffset: destination)
     }
 }
 
@@ -589,7 +616,5 @@ struct AddExerciseSheet: View {
 }
 
 #Preview {
-    let viewModel = WorkoutViewModel()
-    viewModel.startEmptyWorkout()
-    return WorkoutLoggingView(viewModel: viewModel)
+    WorkoutLoggingView(session: DummyData.activeWorkout)
 }

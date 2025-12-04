@@ -7,31 +7,17 @@
 
 import Foundation
 
-struct WorkoutTemplate: Identifiable, Codable {
-    let id: UUID
+struct WorkoutTemplate: Identifiable {
+    let id = UUID()
     var name: String
     var exercises: [TemplateExercise]
-    var createdDate: Date
-    var lastUsedDate: Date?
-    var notes: String?
     
-    init(
-        id: UUID = UUID(),
-        name: String,
-        exercises: [TemplateExercise] = [],
-        createdDate: Date = Date(),
-        lastUsedDate: Date? = nil,
-        notes: String? = nil
-    ) {
-        self.id = id
+    init(name: String, exercises: [TemplateExercise] = []) {
         self.name = name
         self.exercises = exercises
-        self.createdDate = createdDate
-        self.lastUsedDate = lastUsedDate
-        self.notes = notes
     }
     
-    // Helper computed properties
+    // UI helper properties
     var totalExercises: Int {
         exercises.count
     }
@@ -43,32 +29,20 @@ struct WorkoutTemplate: Identifiable, Codable {
     }
 }
 
-// Template exercise structure (prescribed sets/reps, no actual performance data)
-struct TemplateExercise: Identifiable, Codable {
-    let id: UUID
+struct TemplateExercise: Identifiable {
+    let id = UUID()
     var name: String
     var targetSets: Int
     var targetRepsMin: Int
     var targetRepsMax: Int
     var notes: String?
-    var order: Int // For maintaining exercise order in template
     
-    init(
-        id: UUID = UUID(),
-        name: String,
-        targetSets: Int,
-        targetRepsMin: Int,
-        targetRepsMax: Int,
-        notes: String? = nil,
-        order: Int = 0
-    ) {
-        self.id = id
+    init(name: String, targetSets: Int, targetRepsMin: Int, targetRepsMax: Int, notes: String? = nil) {
         self.name = name
         self.targetSets = targetSets
         self.targetRepsMin = targetRepsMin
         self.targetRepsMax = targetRepsMax
         self.notes = notes
-        self.order = order
     }
     
     var targetRepsDisplay: String {

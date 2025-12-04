@@ -7,20 +7,23 @@
 
 import Foundation
 
-struct Exercise: Identifiable, Codable {
-    let id: UUID
+struct Exercise: Identifiable {
+    let id = UUID()
     var name: String
     var sets: [WorkoutSet]
-    var isExpanded: Bool // For the expandable UI in your design
+    var isExpanded: Bool = false
     
-    init(id: UUID = UUID(), name: String, sets: [WorkoutSet] = [], isExpanded: Bool = false) {
-        self.id = id
+    init(name: String, sets: [WorkoutSet] = [], isExpanded: Bool = false) {
         self.name = name
         self.sets = sets
         self.isExpanded = isExpanded
     }
     
-    // Helper computed properties
+    // UI helper properties
+    var completedSetsCount: Int {
+        sets.filter { $0.isCompleted }.count
+    }
+    
     var totalSets: Int {
         sets.count
     }

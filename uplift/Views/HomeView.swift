@@ -8,30 +8,18 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var templateViewModel = TemplateViewModel()
-    @StateObject private var progressViewModel = ProgressViewModel()
-    @StateObject private var workoutViewModel = WorkoutViewModel()
-    @StateObject private var storageManager = StorageManager.shared
-    
-    init() {
-        // Default initializer - creates its own WorkoutViewModel
-    }
-    
-    init(workoutViewModel: WorkoutViewModel) {
-        // Custom initializer - uses shared WorkoutViewModel
-        _workoutViewModel = StateObject(wrappedValue: workoutViewModel)
-    }
-    
     @State private var selectedDate = Date()
-    @State private var selectedTemplate: WorkoutTemplate?
     @State private var showingTemplateSelector = false
     @State private var showingFullCalendar = false
     @State private var showingWorkoutDetail: WorkoutSession?
-    @State private var navigateToWorkout = false
     
-    // Get workouts for selected date
+    // DUMMY DATA - Replace with real data later
+    private let dummyWorkouts = DummyData.sampleWorkouts
+    private let dummyDatesWithWorkouts = DummyData.datesWithWorkouts
+    
+    // Filter workouts for selected date
     private var workoutsForSelectedDate: [WorkoutSession] {
-        storageManager.getWorkoutsForDate(selectedDate)
+        dummyWorkouts.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
     }
     
     private var completedWorkouts: [WorkoutSession] {
@@ -53,71 +41,10 @@ struct HomeView: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     // Header
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Welcome back")
-                                .font(.futuraSubheadline())
-                                .foregroundColor(.gray)
-                            Text(storageManager.userProfile?.name ?? "User")
-                                .font(.futuraTitle2())
-                                .foregroundColor(.white)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {}) {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.white)
-                                .font(.futuraTitle3())
-                        }
-                    }
-                    .padding(.horizontal)
+                    headerView
                     
                     // Calendar Week View with Navigation
-                    VStack(spacing: 8) {
-                        // Month/Year header (tappable for full calendar)
-                        Button(action: {
-                            showingFullCalendar = true
-                        }) {
-                            HStack {
-                                Text(monthYearString)
-                                    .font(.futuraTitle3())
-                                    .foregroundColor(.white)
-                                
-                                Image(systemName: "calendar")
-                                    .font(.futuraSubheadline())
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                        .padding(.horizontal)
-                        
-                        // Week navigation with arrows
-                        HStack(spacing: 0) {
-                            Button(action: previousWeek) {
-                                Image(systemName: "chevron.left")
-                                    .foregroundColor(.white)
-                                    .font(.futuraTitle3())
-                                    .frame(width: 30)
-                            }
-                            
-                            Spacer()
-                            
-                            CalendarWeekView(
-                                selectedDate: $selectedDate,
-                                datesWithWorkouts: progressViewModel.getDatesWithWorkouts()
-                            )
-                            
-                            Spacer()
-                            
-                            Button(action: nextWeek) {
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.white)
-                                    .font(.futuraTitle3())
-                                    .frame(width: 30)
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
+                    calendarSection
                     
                     // Content based on selected date
                     ScrollView {
@@ -136,8 +63,7 @@ struct HomeView: View {
                             if !inProgressWorkouts.isEmpty {
                                 ForEach(inProgressWorkouts) { workout in
                                     InProgressWorkoutCard(workout: workout) {
-                                        workoutViewModel.resumeWorkout(workout)
-                                        navigateToWorkout = true
+                                        // TODO: Resume workout navigation
                                     }
                                 }
                             }
@@ -173,18 +99,13 @@ struct HomeView: View {
                 }
                 .padding(.top)
             }
-            .navigationDestination(isPresented: $navigateToWorkout) {
-                WorkoutLoggingView(viewModel: workoutViewModel)
-            }
             .sheet(isPresented: $showingTemplateSelector) {
                 TemplateSelectionSheet(
-                    templates: templateViewModel.templates,
+                    templates: DummyData.sampleTemplates,
                     selectedDate: selectedDate,
                     onTemplateSelected: { template in
-                        startWorkoutFromTemplate(template)
-                    },
-                    onLoadSample: {
-                        templateViewModel.loadSampleTemplates()
+                        // TODO: Start workout from template
+                        print("Selected template: \(template.name)")
                     }
                 )
             }
@@ -192,18 +113,79 @@ struct HomeView: View {
                 FullCalendarPicker(selectedDate: $selectedDate)
             }
             .sheet(item: $showingWorkoutDetail) { workout in
-                WorkoutDetailSheet(
-                    workout: workout,
-                    onEdit: { editedWorkout in
-                        storageManager.updateWorkoutSession(editedWorkout)
-                        showingWorkoutDetail = nil
-                    },
-                    onDelete: { workoutToDelete in
-                        storageManager.deleteWorkoutSession(workoutToDelete)
-                        showingWorkoutDetail = nil
-                    }
-                )
+                WorkoutDetailSheet(workout: workout)
             }
+        }
+    }
+    
+    // MARK: - View Components
+    
+    private var headerView: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Welcome back")
+                    .font(.futuraSubheadline())
+                    .foregroundColor(.gray)
+                Text("Ruitao Chen")
+                    .font(.futuraTitle2())
+                    .foregroundColor(.white)
+            }
+            
+            Spacer()
+            
+            Button(action: {}) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.white)
+                    .font(.futuraTitle3())
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var calendarSection: some View {
+        VStack(spacing: 8) {
+            // Month/Year header (tappable for full calendar)
+            Button(action: {
+                showingFullCalendar = true
+            }) {
+                HStack {
+                    Text(monthYearString)
+                        .font(.futuraTitle3())
+                        .foregroundColor(.white)
+                    
+                    Image(systemName: "calendar")
+                        .font(.futuraSubheadline())
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.horizontal)
+            
+            // Week navigation with arrows
+            HStack(spacing: 0) {
+                Button(action: previousWeek) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.white)
+                        .font(.futuraTitle3())
+                        .frame(width: 30)
+                }
+                
+                Spacer()
+                
+                CalendarWeekView(
+                    selectedDate: $selectedDate,
+                    datesWithWorkouts: dummyDatesWithWorkouts
+                )
+                
+                Spacer()
+                
+                Button(action: nextWeek) {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.white)
+                        .font(.futuraTitle3())
+                        .frame(width: 30)
+                }
+            }
+            .padding(.horizontal)
         }
     }
     
@@ -222,21 +204,6 @@ struct HomeView: View {
     private func nextWeek() {
         selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
     }
-    
-    private func startWorkoutFromTemplate(_ template: WorkoutTemplate) {
-        var session = WorkoutSession.fromTemplate(template)
-        session.date = selectedDate
-        session.startTime = Date()
-        
-        workoutViewModel.currentSession = session
-        workoutViewModel.isWorkoutActive = true
-        
-        storageManager.addWorkoutSession(session)
-        storageManager.updateTemplateLastUsed(template.id)
-        
-        // Navigate to workout logging view
-        navigateToWorkout = true
-    }
 }
 
 // MARK: - Calendar Week View Component
@@ -250,7 +217,7 @@ struct CalendarWeekView: View {
     // Get the week dates starting from Sunday
     private var weekDates: [Date] {
         let weekday = calendar.component(.weekday, from: selectedDate)
-        let daysToSubtract = weekday - 1 // Sunday is 1, so subtract (weekday - 1) to get to Sunday
+        let daysToSubtract = weekday - 1
         
         guard let weekStart = calendar.date(byAdding: .day, value: -daysToSubtract, to: selectedDate) else {
             return []
@@ -306,13 +273,12 @@ struct CalendarWeekView: View {
     }
     
     private func weekdaySymbol(for weekday: Int) -> String {
-        // Weekday: 1 = Sunday, 2 = Monday, etc.
         let symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         return symbols[weekday - 1]
     }
 }
 
-// MARK: - Completed Workout Card
+// MARK: - Workout Cards
 
 struct CompletedWorkoutCard: View {
     let workout: WorkoutSession
@@ -327,10 +293,7 @@ struct CompletedWorkoutCard: View {
                     
                     HStack(spacing: 12) {
                         Label("\(workout.exercises.count) exercises", systemImage: "figure.strengthtraining.traditional")
-                        
-                        if let duration = workout.durationFormatted {
-                            Label(duration, systemImage: "clock")
-                        }
+                        Label("\(Int(workout.totalVolume)) lbs", systemImage: "scalemass")
                     }
                     .font(.futuraCaption())
                     .foregroundColor(.gray)
@@ -352,8 +315,6 @@ struct CompletedWorkoutCard: View {
         .cornerRadius(12)
     }
 }
-
-// MARK: - In-Progress Workout Card
 
 struct InProgressWorkoutCard: View {
     let workout: WorkoutSession
@@ -395,8 +356,6 @@ struct InProgressWorkoutCard: View {
     }
 }
 
-// MARK: - Empty Date View
-
 struct EmptyDateView: View {
     let onAddWorkout: () -> Void
     
@@ -424,13 +383,12 @@ struct EmptyDateView: View {
     }
 }
 
-// MARK: - Template Selection Sheet
+// MARK: - Sheet Views
 
 struct TemplateSelectionSheet: View {
     let templates: [WorkoutTemplate]
     let selectedDate: Date
     let onTemplateSelected: (WorkoutTemplate) -> Void
-    let onLoadSample: () -> Void
     
     @Environment(\.dismiss) var dismiss
     
@@ -445,72 +403,39 @@ struct TemplateSelectionSheet: View {
             ZStack {
                 Color.black.ignoresSafeArea()
                 
-                if templates.isEmpty {
-                    // Empty state
-                    VStack(spacing: 20) {
-                        Image(systemName: "doc.text")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        
-                        Text("No Templates Yet")
-                            .font(.futuraTitle3())
-                            .foregroundColor(.white)
-                        
-                        Text("Create your first workout template or load sample templates to get started")
-                            .font(.futuraBody())
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                        
-                        Button(action: {
-                            onLoadSample()
-                        }) {
-                            Text("Load Sample Templates")
-                                .font(.futuraHeadline())
-                                .foregroundColor(.black)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.white)
-                                .cornerRadius(12)
-                        }
-                        .padding(.horizontal, 40)
-                    }
-                } else {
-                    // Template list
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            ForEach(templates) { template in
-                                Button(action: {
-                                    onTemplateSelected(template)
-                                    dismiss()
-                                }) {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(template.name)
-                                                .font(.futuraHeadline())
-                                                .foregroundColor(.white)
-                                            
-                                            Text("\(template.totalExercises) exercises • ~\(template.estimatedDuration) min")
-                                                .font(.futuraSubheadline())
-                                                .foregroundColor(.gray)
-                                        }
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(templates) { template in
+                            Button(action: {
+                                onTemplateSelected(template)
+                                dismiss()
+                            }) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(template.name)
+                                            .font(.futuraHeadline())
+                                            .foregroundColor(.white)
                                         
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.right")
+                                        Text("\(template.totalExercises) exercises • ~\(template.estimatedDuration) min")
+                                            .font(.futuraSubheadline())
                                             .foregroundColor(.gray)
                                     }
-                                    .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    
+                                    Spacer()
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
                                 }
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(12)
                             }
                         }
-                        .padding()
                     }
+                    .padding()
                 }
             }
-            .navigationTitle("Select Template for \(dateString)")
+            .navigationTitle("Select Template")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -523,8 +448,6 @@ struct TemplateSelectionSheet: View {
         }
     }
 }
-
-// MARK: - Full Calendar Picker
 
 struct FullCalendarPicker: View {
     @Binding var selectedDate: Date
@@ -558,16 +481,9 @@ struct FullCalendarPicker: View {
     }
 }
 
-// MARK: - Workout Detail Sheet
-
 struct WorkoutDetailSheet: View {
     let workout: WorkoutSession
-    let onEdit: (WorkoutSession) -> Void
-    let onDelete: (WorkoutSession) -> Void
-    
     @Environment(\.dismiss) var dismiss
-    @State private var showingDeleteConfirmation = false
-    @State private var isEditing = false
     
     var body: some View {
         NavigationStack {
@@ -583,9 +499,6 @@ struct WorkoutDetailSheet: View {
                                 .foregroundColor(.white)
                             
                             HStack(spacing: 16) {
-                                if let duration = workout.durationFormatted {
-                                    Label(duration, systemImage: "clock")
-                                }
                                 Label("\(workout.exercises.count) exercises", systemImage: "figure.strengthtraining.traditional")
                                 Label("\(Int(workout.totalVolume)) lbs", systemImage: "scalemass")
                             }
@@ -635,52 +548,6 @@ struct WorkoutDetailSheet: View {
                                 .padding(.horizontal)
                             }
                         }
-                        
-                        // Notes
-                        if let notes = workout.notes, !notes.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Notes")
-                                    .font(.futuraHeadline())
-                                    .foregroundColor(.white)
-                                
-                                Text(notes)
-                                    .font(.futuraBody())
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
-                            .padding(.horizontal)
-                        }
-                        
-                        // Action Buttons
-                        VStack(spacing: 12) {
-                            Button(action: {
-                                isEditing = true
-                            }) {
-                                Text("Edit Workout")
-                                    .font(.futuraHeadline())
-                                    .foregroundColor(.black)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(12)
-                            }
-                            
-                            Button(action: {
-                                showingDeleteConfirmation = true
-                            }) {
-                                Text("Delete Workout")
-                                    .font(.futuraHeadline())
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.red.opacity(0.3))
-                                    .cornerRadius(12)
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 20)
                     }
                     .padding(.vertical)
                 }
@@ -694,14 +561,6 @@ struct WorkoutDetailSheet: View {
                     }
                     .foregroundColor(.white)
                 }
-            }
-            .alert("Delete Workout?", isPresented: $showingDeleteConfirmation) {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    onDelete(workout)
-                }
-            } message: {
-                Text("This action cannot be undone.")
             }
         }
     }
