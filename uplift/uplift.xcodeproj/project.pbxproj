@@ -24,6 +24,7 @@
 		26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */; };
 		26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */; };
 		26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AE90E12EE0A6E900B2BE71 /* HomeView.swift */; };
+		26D5EB742EE34AC400042FA0 /* GradientBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5EB732EE34AC100042FA0 /* GradientBorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		26AE90D92EE0A3DC00B2BE71 /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		26AE90DB2EE0A4F500B2BE71 /* WorkoutSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSet.swift; sourceTree = "<group>"; };
 		26AE90E12EE0A6E900B2BE71 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		26D5EB732EE34AC100042FA0 /* GradientBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientBorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 		262113DF2EE0C11100A041AD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				26D5EB732EE34AC100042FA0 /* GradientBorder.swift */,
 				262113E12EE0C12500A041AD /* Font+Extension.swift */,
 			);
 			path = Extensions;
@@ -203,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */,
+				26D5EB742EE34AC400042FA0 /* GradientBorder.swift in Sources */,
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
 				269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */,
@@ -350,6 +354,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -381,6 +386,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -13,6 +13,8 @@ struct HomeView: View {
     @State private var showingFullCalendar = false
     @State private var showingWorkoutDetail: WorkoutSession?
     @State private var workoutToEdit: WorkoutSession?
+    @State private var workoutToDelete: WorkoutSession?
+    @State private var showingDeleteConfirmation = false
     
     @EnvironmentObject var workoutManager: WorkoutManager
     
@@ -79,6 +81,14 @@ struct HomeView: View {
                                         .onTapGesture {
                                             showingWorkoutDetail = workout
                                         }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            workoutToDelete = workout
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete Workout", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
                             
@@ -88,6 +98,14 @@ struct HomeView: View {
                                     ScheduledWorkoutCard(workout: workout) {
                                         if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
                                             workoutToEdit = workoutManager.workouts[index]
+                                        }
+                                    }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            workoutToDelete = workout
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete Workout", systemImage: "trash")
                                         }
                                     }
                                 }
@@ -101,6 +119,14 @@ struct HomeView: View {
                                             workoutToEdit = workoutManager.workouts[index]
                                         }
                                     }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            workoutToDelete = workout
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete Workout", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
                             
@@ -110,6 +136,14 @@ struct HomeView: View {
                                     NotStartedTodayCard(workout: workout) {
                                         if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
                                             workoutToEdit = workoutManager.workouts[index]
+                                        }
+                                    }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            workoutToDelete = workout
+                                            showingDeleteConfirmation = true
+                                        } label: {
+                                            Label("Delete Workout", systemImage: "trash")
                                         }
                                     }
                                 }
@@ -131,16 +165,22 @@ struct HomeView: View {
                                     showingTemplateSelector = true
                                 }) {
                                     HStack {
-                                        Image(systemName: "plus.circle.fill")
+                                        Image(systemName: "plus.circle")
                                             .font(.futuraTitle3())
                                         Text(addWorkoutButtonText)
                                             .font(.futuraHeadline())
                                     }
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .padding(.vertical, 14)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.gray.opacity(0.15))
+                                    )
+                                    .overlay(
+                                        Capsule()
+                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                    )
                                 }
                             }
                         }
@@ -168,6 +208,25 @@ struct HomeView: View {
             .sheet(item: $showingWorkoutDetail) { workout in
                 WorkoutDetailSheet(workout: workout)
             }
+            .alert("Delete Workout?", isPresented: $showingDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    workoutToDelete = nil
+                }
+                Button("Delete", role: .destructive) {
+                    if let workout = workoutToDelete {
+                        workoutManager.deleteWorkout(workout)
+                    }
+                    workoutToDelete = nil
+                }
+            } message: {
+                if let workout = workoutToDelete {
+                    if workout.isCompleted {
+                        Text("This will permanently delete \"\(workout.templateName ?? "Workout")\" and all its data.")
+                    } else {
+                        Text("This will remove \"\(workout.templateName ?? "Workout")\" from your schedule.")
+                    }
+                }
+            }
             .fullScreenCover(item: $workoutToEdit) { workout in
                 if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
                     NavigationStack {
@@ -181,71 +240,103 @@ struct HomeView: View {
     // MARK: - View Components
     
     private var headerView: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("Welcome back")
-                    .font(.futuraSubheadline())
-                    .foregroundColor(.gray)
-                Text("Ruitao Chen")
-                    .font(.futuraTitle2())
+        HStack(spacing: 16) {
+            // User initials circle on the left
+            ZStack {
+                Circle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 44, height: 44)
+                
+                Text("RC")  // User initials
+                    .font(.futuraHeadline())
                     .foregroundColor(.white)
             }
             
             Spacer()
             
+            // Centered welcome text
+            VStack(spacing: 2) {
+                Text("Welcome back")
+                    .font(.futuraSubheadline())
+                    .foregroundColor(.gray)
+                Text("Ruitao Chen")
+                        .font(.futuraTitle3())
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
+            
+            Spacer()
+            
+            // Search button on the right
             Button(action: {}) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.white)
-                    .font(.futuraTitle3())
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 44, height: 44)
+                    
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.white)
+                        .font(.futuraBody())
+                }
             }
         }
         .padding(.horizontal)
     }
     
     private var calendarSection: some View {
-        VStack(spacing: 8) {
-            // Month/Year header (tappable for full calendar)
-            Button(action: {
-                showingFullCalendar = true
-            }) {
-                HStack {
-                    Text(monthYearString)
-                        .font(.futuraTitle3())
-                        .foregroundColor(.white)
+        VStack(spacing: 12) {
+            // Month/Year header with arrows on the right
+            HStack {
+                Button(action: {
+                    showingFullCalendar = true
+                }) {
+                    HStack(spacing: 6) {
+                        Text(monthYearString)
+                            .font(.futuraTitle3())
+                            .foregroundColor(.white)
+                        
+                        Image(systemName: "calendar")
+                            .font(.futuraCaption())
+                            .foregroundColor(.gray)
+                    }
+                }
+                
+                Spacer()
+                
+                // Navigation arrows on the right
+                HStack(spacing: 16) {
+                    Button(action: previousWeek) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                            .font(.futuraBody())
+                    }
                     
-                    Image(systemName: "calendar")
-                        .font(.futuraSubheadline())
-                        .foregroundColor(.gray)
+                    Button(action: nextWeek) {
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.white)
+                            .font(.futuraBody())
+                    }
                 }
             }
             .padding(.horizontal)
             
-            // Week navigation with arrows
-            HStack(spacing: 0) {
-                Button(action: previousWeek) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
-                        .font(.futuraTitle3())
-                        .frame(width: 30)
-                }
-                
-                Spacer()
-                
-                CalendarWeekView(
-                    selectedDate: $selectedDate,
-                    datesWithWorkouts: datesWithWorkouts
-                )
-                
-                Spacer()
-                
-                Button(action: nextWeek) {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.white)
-                        .font(.futuraTitle3())
-                        .frame(width: 30)
-                }
-            }
-            .padding(.horizontal)
+            // Week view with swipe gesture
+            CalendarWeekView(
+                selectedDate: $selectedDate,
+                datesWithWorkouts: datesWithWorkouts
+            )
+            .gesture(
+                DragGesture(minimumDistance: 50)
+                    .onEnded { value in
+                        if value.translation.width < 0 {
+                            // Swiped left - next week
+                            nextWeek()
+                        } else if value.translation.width > 0 {
+                            // Swiped right - previous week
+                            previousWeek()
+                        }
+                    }
+            )
         }
     }
     
@@ -257,7 +348,7 @@ struct HomeView: View {
         } else if isSelectedDateToday {
             return "Add Another Workout"
         } else {
-            return "Add Another Missing Workout"
+            return "Add Missing Workout"
         }
     }
     
@@ -324,34 +415,67 @@ struct CalendarWeekView: View {
                 let isToday = calendar.isDateInToday(date)
                 let hasWorkout = datesWithWorkouts.contains(calendar.startOfDay(for: date))
                 
-                VStack(spacing: 4) {
+                VStack(spacing: 8) {
+                    // Day of week label
                     Text(weekdaySymbol(for: dayOfWeek))
                         .font(.futuraCaption())
-                        .foregroundColor(.gray)
+                        .foregroundColor(isSelected ? .white : .gray)
                     
+                    // Date card
                     ZStack {
-                        Text("\(dayNumber)")
-                            .font(.futuraBody())
-                            .foregroundColor(isSelected ? .black : .white)
-                            .frame(width: 36, height: 36)
-                            .background(isSelected ? Color.white : (isToday ? Color.gray.opacity(0.3) : Color.clear))
-                            .cornerRadius(8)
+                        // Subtle background for today (behind everything)
+                        if isToday && !isSelected {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.gray.opacity(0.15))
+                                .frame(width: 44, height: 56)
+                        }
+                        
+                        if isSelected {
+                            // Selected date - large white rounded rectangle
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.white)
+                                .frame(width: 50, height: 64)
+                            
+                            Text("\(dayNumber)")
+                                .font(.futuraTitle2())
+                                .foregroundColor(.black)
+                        } else {
+                            // Unselected date - with fade-edge gradient border
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.clear)
+                                    .frame(width: 44, height: 56)
+                                    .fadeEdgeBorder(
+                                        color: .gray,
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .horizontal
+                                    )
+                                
+                                Text("\(dayNumber)")
+                                    .font(.futuraBody())
+                                    .foregroundColor(.white)
+                            }
+                        }
                         
                         // Workout indicator dot
-                        if hasWorkout {
+                        if hasWorkout && !isSelected {
                             Circle()
                                 .fill(Color.green)
-                                .frame(width: 5, height: 5)
-                                .offset(x: 11, y: -11)
+                                .frame(width: 4, height: 4)
+                                .offset(x: 15, y: -20)
                         }
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .onTapGesture {
-                    selectedDate = date
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedDate = date
+                    }
                 }
             }
         }
+        .padding(.horizontal)
     }
     
     private func weekdaySymbol(for weekday: Int) -> String {
@@ -393,8 +517,17 @@ struct CompletedWorkoutCard: View {
                 .foregroundColor(.gray)
         }
         .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.2))
+        )
+        // VERSION 1: Radial glow effect
+        .fadeEdgeBorder(
+            color: .white,
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
     }
 }
 
@@ -412,7 +545,7 @@ struct ScheduledWorkoutCard: View {
                     
                     Text("Scheduled for \(formattedDate)")
                         .font(.futuraCaption())
-                        .foregroundColor(.gray)
+                        .foregroundColor(.white.opacity(0.8))
                 }
                 
                 Spacer()
@@ -425,16 +558,28 @@ struct ScheduledWorkoutCard: View {
             Button(action: onStart) {
                 Text("View Workout")
                     .font(.futuraHeadline())
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color.blue)
-                    .cornerRadius(8)
+                    .padding(.vertical, 14)
+                    .background(
+                        Capsule()
+                            .fill(Color.blue)
+                    )
+                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
             }
         }
         .padding()
-        .background(Color.blue.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(red: 0.1, green: 0.2, blue: 0.3))
+        )
+        // VERSION 1: Radial glow effect
+        .fadeEdgeBorder(
+            color: .white,
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
     }
     
     private var formattedDate: String {
@@ -456,14 +601,14 @@ struct InProgressWorkoutCard: View {
                         .font(.futuraHeadline())
                         .foregroundColor(.white)
                     
-                    Text("\(workout.completedSets)/\(workout.totalSets) sets completed")
+                    Text("Ready to start")
                         .font(.futuraCaption())
-                        .foregroundColor(.gray)
+                        .foregroundColor(.white.opacity(0.8))
                 }
                 
                 Spacer()
-                
-                Image(systemName: "clock.fill")
+
+                Image(systemName: "play.circle.fill")
                     .foregroundColor(.orange)
                     .font(.futuraTitle3())
             }
@@ -473,14 +618,26 @@ struct InProgressWorkoutCard: View {
                     .font(.futuraHeadline())
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color.orange)
-                    .cornerRadius(8)
+                    .padding(.vertical, 14)
+                    .background(
+                        Capsule()  // Fully pill-shaped
+                            .fill(Color.orange)
+                    )
+                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)  // Subtle shadow
             }
         }
         .padding()
-        .background(Color.orange.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(red: 0.3, green: 0.2, blue: 0.15))
+        )
+        // VERSION 1: Radial glow effect
+        .fadeEdgeBorder(
+            color: .white,
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
     }
 }
 
@@ -498,13 +655,13 @@ struct NotStartedTodayCard: View {
                     
                     Text("Ready to start")
                         .font(.futuraCaption())
-                        .foregroundColor(.gray)
+                        .foregroundColor(.white.opacity(0.8))
                 }
                 
                 Spacer()
                 
                 Image(systemName: "play.circle.fill")
-                    .foregroundColor(.white)
+                    .foregroundColor(.green)
                     .font(.futuraTitle3())
             }
             
@@ -513,14 +670,26 @@ struct NotStartedTodayCard: View {
                     .font(.futuraHeadline())
                     .foregroundColor(.black)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(Color.white)
-                    .cornerRadius(8)
+                    .padding(.vertical, 14)
+                    .background(
+                        Capsule()
+                            .fill(Color.green)
+                    )
+                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
             }
         }
         .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(red: 0.1, green: 0.25, blue: 0.2))
+        )
+        // VERSION 1: Radial glow effect
+        .fadeEdgeBorder(
+            color: .white,
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
     }
 }
 
@@ -570,14 +739,26 @@ struct EmptyDateView: View {
                 .font(.futuraHeadline())
                 .foregroundColor(.gray)
             
+            Spacer()
+            
             Button(action: onAddWorkout) {
-                Text(buttonText)
-                    .font(.futuraHeadline())
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(12)
+                HStack {
+                    Image(systemName: "plus.circle")
+                        .font(.futuraTitle3())
+                    Text(buttonText)
+                        .font(.futuraHeadline())
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(
+                    Capsule()
+                        .fill(Color.gray.opacity(0.15))
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                )
             }
         }
         .padding(.vertical, 40)
