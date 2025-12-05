@@ -755,11 +755,13 @@ struct EmptyDateView: View {
                     Capsule()
                         .fill(Color.gray.opacity(0.15))
                 )
-                .overlay(
-                    Capsule()
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
             }
+            .fadeEdgeBorder(
+                color: .white,
+                cornerRadius: 100,  // Use large value for capsule shape
+                lineWidth: 1,
+                fadeStyle: .horizontal
+            )
         }
         .padding(.vertical, 40)
     }
@@ -777,27 +779,29 @@ struct TemplateSelectionSheet: View {
     
     @Environment(\.dismiss) var dismiss
     
-    private var dateString: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: selectedDate)
-    }
-    
-    private var titleText: String {
-        if isFuture {
-            return "Schedule Workout"
-        } else if isPast {
-            return "Add Missing Workout"
-        } else {
-            return "Select Template"
-        }
-    }
-    
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.black.ignoresSafeArea()
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Custom Header
+                HStack {
+                    Text("Select Template")
+                        .font(.futuraTitle2())
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .foregroundColor(.white)
+                    .font(.futuraBody())
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 16)
                 
+                // Template List
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(templates) { template in
@@ -822,22 +826,21 @@ struct TemplateSelectionSheet: View {
                                         .foregroundColor(.gray)
                                 }
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 16,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                             }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding()
-                }
-            }
-            .navigationTitle(titleText)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .foregroundColor(.white)
                 }
             }
         }

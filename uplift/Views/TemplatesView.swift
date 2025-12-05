@@ -26,25 +26,54 @@ struct TemplatesView: View {
             ZStack {
                 Color.black.ignoresSafeArea()
                 
-                if workoutManager.templates.isEmpty {
-                    // Empty State
-                    emptyStateView
-                } else {
-                    // Template List
-                    ScrollView {
-                        VStack(spacing: 24) {
-                            // Favorites Section
-                            if !favoriteTemplates.isEmpty {
+                VStack(spacing: 0) {
+                    // Custom Header
+                    headerView
+                    
+                    if workoutManager.templates.isEmpty {
+                        // Empty State
+                        emptyStateView
+                    } else {
+                        // Template List
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                // Favorites Section
+                                if !favoriteTemplates.isEmpty {
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        Text("Favorites")
+                                            .font(.futuraTitle3())
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal)
+                                        
+                                        ForEach(favoriteTemplates) { template in
+                                            TemplateCard(
+                                                template: template,
+                                                isFavorite: true,
+                                                onTap: {
+                                                    templateToEdit = template
+                                                },
+                                                onToggleFavorite: {
+                                                    toggleFavorite(template)
+                                                },
+                                                onDelete: {
+                                                    deleteTemplate(template)
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                
+                                // All Templates Section
                                 VStack(alignment: .leading, spacing: 12) {
-                                    Text("Favorites")
-                                        .font(.futuraTitle3())
+                                    Text(favoriteTemplates.isEmpty ? "Templates" : "All Templates")
+                                        .font(.futuraHeadline())
                                         .foregroundColor(.white)
                                         .padding(.horizontal)
                                     
-                                    ForEach(favoriteTemplates) { template in
+                                    ForEach(otherTemplates) { template in
                                         TemplateCard(
                                             template: template,
-                                            isFavorite: true,
+                                            isFavorite: false,
                                             onTap: {
                                                 templateToEdit = template
                                             },
@@ -58,45 +87,8 @@ struct TemplatesView: View {
                                     }
                                 }
                             }
-                            
-                            // All Templates Section
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(favoriteTemplates.isEmpty ? "Templates" : "All Templates")
-                                    .font(.futuraTitle3())
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal)
-                                
-                                ForEach(otherTemplates) { template in
-                                    TemplateCard(
-                                        template: template,
-                                        isFavorite: false,
-                                        onTap: {
-                                            templateToEdit = template
-                                        },
-                                        onToggleFavorite: {
-                                            toggleFavorite(template)
-                                        },
-                                        onDelete: {
-                                            deleteTemplate(template)
-                                        }
-                                    )
-                                }
-                            }
+                            .padding(.vertical)
                         }
-                        .padding(.vertical)
-                    }
-                }
-            }
-            .navigationTitle("Templates")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showingCreateTemplate = true
-                    }) {
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .font(.futuraTitle3())
                     }
                 }
             }
@@ -113,7 +105,6 @@ struct TemplatesView: View {
                     CreateEditTemplateView(
                         template: workoutManager.templates[index],
                         onSave: { updatedTemplate in
-                            // Update the template in place
                             let original = workoutManager.templates[index]
                             original.name = updatedTemplate.name
                             original.exercises = updatedTemplate.exercises
@@ -126,6 +117,48 @@ struct TemplatesView: View {
     }
     
     // MARK: - Empty State
+    
+    private var headerView: some View {
+        HStack(spacing: 16) {
+            // User initials circle on the left
+            ZStack {
+                Circle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 44, height: 44)
+                
+                Text("RC")  // User initials
+                    .font(.futuraHeadline())
+                    .foregroundColor(.white)
+            }
+            
+            Spacer()
+            
+            // Centered "Templates" text
+            Text("Templates")
+                .font(.futuraTitle2())
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            // Add button on the right
+            Button(action: {
+                showingCreateTemplate = true
+            }) {
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 44, height: 44)
+                    
+                    Image(systemName: "plus")
+                        .foregroundColor(.white)
+                        .font(.futuraBody())
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+    }
     
     private var emptyStateView: some View {
         VStack(spacing: 24) {
@@ -216,8 +249,16 @@ struct TemplateCard: View {
                     .font(.futuraSubheadline())
             }
             .padding()
-            .background(Color.gray.opacity(0.2))
-            .cornerRadius(12)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.gray.opacity(0.2))
+            )
+            .fadeEdgeBorder(
+                color: .white.opacity(0.5),
+                cornerRadius: 16,
+                lineWidth: 1,
+                fadeStyle: .radial
+            )
             .padding(.horizontal)
         }
         .buttonStyle(PlainButtonStyle())
@@ -240,8 +281,4 @@ struct TemplateCard: View {
             Text("This will permanently delete \"\(template.name)\" and cannot be undone.")
         }
     }
-}
-
-#Preview {
-    TemplatesView()
 }

@@ -13,6 +13,46 @@ struct ProgressView: View {
     @State private var selectedMonth: Date = Date()
     @State private var selectedExercise: ExerciseStats?
     
+    private var headerView: some View {
+        HStack(spacing: 16) {
+            // User initials circle on the left
+            ZStack {
+                Circle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(width: 44, height: 44)
+                
+                Text("RC")  // User initials
+                    .font(.futuraHeadline())
+                    .foregroundColor(.white)
+            }
+            
+            Spacer()
+            
+            // Centered "Progress" text
+            Text("Progress")
+                .font(.futuraTitle2())
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            // Search button on the right
+            Button(action: {}) {
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 44, height: 44)
+                    
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.white)
+                        .font(.futuraBody())
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+    }
+    
     private var workoutDates: Set<Date> {
         workoutManager.workoutDates()
     }
@@ -26,24 +66,27 @@ struct ProgressView: View {
             ZStack {
                 Color.black.ignoresSafeArea()
                 
-                if exerciseStats.isEmpty {
-                    // Empty State
-                    emptyStateView
-                } else {
-                    ScrollView {
-                        VStack(spacing: 24) {
-                            // Monthly Calendar Heatmap
-                            calendarSection
-                            
-                            // Exercise List
-                            exerciseListSection
+                VStack(spacing: 0) {
+                    // Custom Header
+                    headerView
+                    
+                    if exerciseStats.isEmpty {
+                        // Empty State
+                        emptyStateView
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                // Monthly Calendar Heatmap
+                                calendarSection
+                                
+                                // Exercise List
+                                exerciseListSection
+                            }
+                            .padding(.vertical)
                         }
-                        .padding(.vertical)
                     }
                 }
             }
-            .navigationTitle("Progress")
-            .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedExercise) { stats in
                 ExerciseDetailView(exerciseStats: stats)
             }
@@ -78,32 +121,44 @@ struct ProgressView: View {
         VStack(spacing: 12) {
             // Month Navigation
             HStack {
-                Button(action: previousMonth) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
-                        .font(.futuraTitle3())
-                }
-                
-                Spacer()
-                
                 Text(monthYearString)
                     .font(.futuraTitle3())
                     .foregroundColor(.white)
                 
                 Spacer()
                 
-                Button(action: nextMonth) {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.white)
-                        .font(.futuraTitle3())
+                // Navigation arrows on the right
+                HStack(spacing: 16) {
+                    Button(action: previousMonth) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.white)
+                            .font(.futuraBody())
+                    }
+                    
+                    Button(action: nextMonth) {
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.white)
+                            .font(.futuraBody())
+                    }
                 }
             }
             .padding(.horizontal)
             
-            // Calendar Grid
+            // Calendar Grid with border
             MonthlyCalendarHeatmap(
                 selectedMonth: selectedMonth,
                 workoutDates: workoutDates
+            )
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.gray.opacity(0.1))
+            )
+            .fadeEdgeBorder(
+                color: .white.opacity(0.4),
+                cornerRadius: 16,
+                lineWidth: 1,
+                fadeStyle: .radial
             )
             .padding(.horizontal)
         }
@@ -193,7 +248,7 @@ struct MonthlyCalendarHeatmap: View {
             }
         }
         
-        // Add remaining days to last week
+        // FIXED: Add remaining days to last week and fill with nil
         if !currentWeek.isEmpty {
             while currentWeek.count < 7 {
                 currentWeek.append(nil)
@@ -228,9 +283,11 @@ struct MonthlyCalendarHeatmap: View {
                                     isToday: calendar.isDateInToday(date)
                                 )
                             } else {
-                                // Empty cell
-                                Color.clear
+                                // Empty cell with subtle outline
+                                Circle()
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)  // Also increased opacity
                                     .frame(width: 36, height: 36)
+                                    .frame(width: 40, height: 40)  // Add outer frame for consistent spacing
                             }
                         }
                     }
@@ -253,24 +310,34 @@ struct CalendarDayCell: View {
     
     var body: some View {
         ZStack {
-            // Background circle
-            Circle()
-                .fill(hasWorkout ? Color.white : Color.clear)
-                .frame(width: 36, height: 36)
-            
-            // Border for today
-            if isToday && !hasWorkout {
+            if hasWorkout {
+                // Workout day - filled white circle
                 Circle()
-                    .stroke(Color.gray, lineWidth: 1)
+                    .fill(Color.white)
+                    .frame(width: 36, height: 36)  // Changed from 36 to match
+                
+                Text("\(dayNumber)")
+                    .font(.futuraBody())
+                    .foregroundColor(.black)
+            } else {
+                // No workout - subtle outline
+                Circle()
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     .frame(width: 36, height: 36)
+                
+                Text("\(dayNumber)")
+                    .font(.futuraBody())
+                    .foregroundColor(.white)
             }
             
-            // Day number
-            Text("\(dayNumber)")
-                .font(.futuraBody())
-                .foregroundColor(hasWorkout ? .black : .white)
+            // Today indicator - additional ring
+            if isToday && !hasWorkout {
+                Circle()
+                    .stroke(Color.white, lineWidth: 2)
+                    .frame(width: 36, height: 36)
+            }
         }
-        .frame(width: 40, height: 40)
+        .frame(width: 40, height: 40)  // Keep outer frame for spacing
     }
 }
 
@@ -308,8 +375,16 @@ struct ExerciseStatsRow: View {
                 .font(.futuraSubheadline())
         }
         .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.2))
+        )
+        .fadeEdgeBorder(
+            color: .white.opacity(0.4),
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
         .padding(.horizontal)
     }
 }

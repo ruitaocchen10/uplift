@@ -216,7 +216,6 @@ struct ExerciseCardView: View {
                         .font(.futuraSubheadline())
                 }
                 .padding()
-                .background(Color.gray.opacity(0.2))
             }
             
             // Expanded Content
@@ -271,13 +270,21 @@ struct ExerciseCardView: View {
                             .padding(.vertical, 8)
                     }
                     .padding(.horizontal)
+                    .padding(.bottom, 8)
                 }
-                .padding(.bottom, 8)
-                .background(Color.gray.opacity(0.2))
             }
         }
         .id(refreshID)
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.gray.opacity(0.2))
+        )
+        .fadeEdgeBorder(
+            color: .white.opacity(0.4),
+            cornerRadius: 16,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
         .padding(.horizontal)
         .alert("Delete Exercise?", isPresented: $showingDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
@@ -319,112 +326,84 @@ struct SetRowView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // Set number
+            // Set Number
             Text("\(setNumber)")
                 .font(.futuraBody())
                 .foregroundColor(.gray)
-                .frame(width: 30)
+                .frame(width: 40)
             
-            // Weight input with steppers
-            HStack(spacing: 4) {
-                Button(action: {
-                    localWeight = max(0, localWeight - 5)
-                    set.weight = localWeight
-                }) {
-                    Image(systemName: "minus.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
-                
-                TextField("0", value: $localWeight, format: .number)
-                    .font(.futuraBody())
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                    .keyboardType(.numberPad)
-                    .focused($focusedField, equals: .weight)
-                    .frame(width: 50)
-                    .onChange(of: localWeight) { oldValue, newValue in
-                        set.weight = newValue
-                    }
-                
-                Button(action: {
-                    localWeight += 5
-                    set.weight = localWeight
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
-                
+            // Weight Input
+            VStack(spacing: 4) {
                 Text("lbs")
                     .font(.futuraCaption())
                     .foregroundColor(.gray)
-            }
-            .frame(maxWidth: .infinity)
-            
-            // Reps input with steppers
-            HStack(spacing: 4) {
-                Button(action: {
-                    localReps = max(0, localReps - 1)
-                    set.reps = localReps
-                }) {
-                    Image(systemName: "minus.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
                 
-                TextField("0", value: $localReps, format: .number)
+                TextField("0", value: $localWeight, format: .number)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.center)
                     .font(.futuraBody())
                     .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
+                    .padding(8)
+                    .background(Color.black)
+                    .cornerRadius(8)
+                    .focused($focusedField, equals: .weight)
+                    .onChange(of: localWeight) { oldValue, newValue in
+                        set.weight = newValue
+                    }
+            }
+            .frame(width: 80)
+            
+            // Reps Input
+            VStack(spacing: 4) {
+                Text("reps")
+                    .font(.futuraCaption())
+                    .foregroundColor(.gray)
+                
+                TextField("0", value: $localReps, format: .number)
                     .keyboardType(.numberPad)
+                    .multilineTextAlignment(.center)
+                    .font(.futuraBody())
+                    .foregroundColor(.white)
+                    .padding(8)
+                    .background(Color.black)
+                    .cornerRadius(8)
                     .focused($focusedField, equals: .reps)
-                    .frame(width: 40)
                     .onChange(of: localReps) { oldValue, newValue in
                         set.reps = newValue
                     }
-                
-                Button(action: {
-                    localReps += 1
-                    set.reps = localReps
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
             }
-            .frame(maxWidth: .infinity)
+            .frame(width: 80)
             
-            // Completion checkmark
+            Spacer()
+            
+            // Completion Checkmark
             Button(action: {
                 localCompleted.toggle()
                 set.isCompleted = localCompleted
             }) {
                 Image(systemName: localCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(localCompleted ? .green : .gray)
                     .font(.futuraTitle3())
+                    .foregroundColor(localCompleted ? .green : .gray)
             }
             
-            // Delete set button
+            // Delete Button
             Button(action: {
                 showingDeleteConfirmation = true
             }) {
                 Image(systemName: "trash")
+                    .font(.futuraSubheadline())
                     .foregroundColor(.red)
-                    .font(.futuraBody())
-            }
-            .alert("Delete Set?", isPresented: $showingDeleteConfirmation) {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    onDelete()
-                }
-            } message: {
-                Text("Remove this set from the exercise?")
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(localCompleted ? Color.green.opacity(0.1) : Color.clear)
+        .alert("Delete Set?", isPresented: $showingDeleteConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                onDelete()
+            }
+        } message: {
+            Text("This will remove set \(setNumber) from the exercise.")
+        }
     }
 }
 
