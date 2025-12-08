@@ -129,8 +129,16 @@ struct ExerciseDetailView: View {
                 }
                 .frame(height: 200)
                 .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.gray.opacity(0.1))
+                )
+                .fadeEdgeBorder(
+                    color: .white.opacity(0.3),
+                    cornerRadius: 12,
+                    lineWidth: 1,
+                    fadeStyle: .radial
+                )
                 .padding(.horizontal)
             }
             
@@ -174,8 +182,16 @@ struct ExerciseDetailView: View {
                 }
                 .frame(height: 200)
                 .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.gray.opacity(0.1))
+                )
+                .fadeEdgeBorder(
+                    color: .white.opacity(0.3),
+                    cornerRadius: 12,
+                    lineWidth: 1,
+                    fadeStyle: .radial
+                )
                 .padding(.horizontal)
             }
             
@@ -209,8 +225,16 @@ struct ExerciseDetailView: View {
             Spacer()
         }
         .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.2))
+        )
+        .fadeEdgeBorder(
+            color: .yellow.opacity(0.5),
+            cornerRadius: 12,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
         .padding(.horizontal)
     }
     
@@ -228,8 +252,16 @@ struct ExerciseDetailView: View {
         }
         .frame(height: 200)
         .frame(maxWidth: .infinity)
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.1))
+        )
+        .fadeEdgeBorder(
+            color: .white.opacity(0.3),
+            cornerRadius: 12,
+            lineWidth: 1,
+            fadeStyle: .radial
+        )
         .padding(.horizontal)
     }
     

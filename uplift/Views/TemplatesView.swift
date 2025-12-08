@@ -186,8 +186,16 @@ struct TemplatesView: View {
                     .foregroundColor(.black)
                     .padding()
                     .frame(maxWidth: 300)
-                    .background(Color.white)
-                    .cornerRadius(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white)
+                    )
+                    .fadeEdgeBorder(
+                        color: .white.opacity(0.6),
+                        cornerRadius: 12,
+                        lineWidth: 1,
+                        fadeStyle: .radial
+                    )
             }
         }
     }

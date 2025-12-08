@@ -66,8 +66,16 @@ struct CreateEditTemplateView: View {
                                 .font(.futuraBody())
                                 .foregroundColor(.white)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                         
@@ -82,8 +90,16 @@ struct CreateEditTemplateView: View {
                                 .foregroundColor(.white)
                                 .lineLimit(3...6)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                         
@@ -117,8 +133,16 @@ struct CreateEditTemplateView: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 40)
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.1))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.3),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                                 .padding(.horizontal)
                             } else {
                                 // Exercise List
@@ -148,8 +172,16 @@ struct CreateEditTemplateView: View {
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                             }
                             .padding(.horizontal)
                         }
@@ -246,8 +278,16 @@ struct TemplateExerciseRow: View {
                     .font(.futuraSubheadline())
             }
             .padding()
-            .background(Color.gray.opacity(0.2))
-            .cornerRadius(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray.opacity(0.2))
+            )
+            .fadeEdgeBorder(
+                color: .white.opacity(0.4),
+                cornerRadius: 12,
+                lineWidth: 1,
+                fadeStyle: .radial
+            )
             .padding(.horizontal)
         }
         .buttonStyle(PlainButtonStyle())
@@ -311,8 +351,16 @@ struct AddTemplateExerciseSheet: View {
                             .autocapitalization(.words)
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.gray.opacity(0.2))
+                    )
+                    .fadeEdgeBorder(
+                        color: .white.opacity(0.4),
+                        cornerRadius: 12,
+                        lineWidth: 1,
+                        fadeStyle: .radial
+                    )
                     .padding()
                     
                     // Exercise list
@@ -333,8 +381,16 @@ struct AddTemplateExerciseSheet: View {
                                             .foregroundColor(.gray)
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                             
@@ -354,8 +410,16 @@ struct AddTemplateExerciseSheet: View {
                                             .foregroundColor(.green)
                                     }
                                     .padding()
-                                    .background(Color.green.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.green.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .green.opacity(0.5),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                         }
@@ -422,8 +486,16 @@ struct ConfigureExerciseSheet: View {
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                         
@@ -459,8 +531,16 @@ struct ConfigureExerciseSheet: View {
                                 }
                             }
                             .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.2))
+                            )
+                            .fadeEdgeBorder(
+                                color: .white.opacity(0.4),
+                                cornerRadius: 12,
+                                lineWidth: 1,
+                                fadeStyle: .radial
+                            )
                         }
                         .padding(.horizontal)
                         
@@ -478,8 +558,16 @@ struct ConfigureExerciseSheet: View {
                             }
                             .tint(.white)
                             .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.2))
+                            )
+                            .fadeEdgeBorder(
+                                color: .white.opacity(0.4),
+                                cornerRadius: 12,
+                                lineWidth: 1,
+                                fadeStyle: .radial
+                            )
                             
                             if useSameReps {
                                 // Single rep count
@@ -511,8 +599,16 @@ struct ConfigureExerciseSheet: View {
                                     }
                                 }
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                             } else {
                                 // Rep range
                                 VStack(spacing: 12) {
@@ -554,8 +650,16 @@ struct ConfigureExerciseSheet: View {
                                         }
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                     
                                     // Max reps
                                     HStack {
@@ -589,8 +693,16 @@ struct ConfigureExerciseSheet: View {
                                         }
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                         }
@@ -607,8 +719,16 @@ struct ConfigureExerciseSheet: View {
                                 .foregroundColor(.white)
                                 .lineLimit(2...4)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                     }
@@ -692,8 +812,16 @@ struct EditTemplateExerciseSheet: View {
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                         
@@ -729,8 +857,16 @@ struct EditTemplateExerciseSheet: View {
                                 }
                             }
                             .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.2))
+                            )
+                            .fadeEdgeBorder(
+                                color: .white.opacity(0.4),
+                                cornerRadius: 12,
+                                lineWidth: 1,
+                                fadeStyle: .radial
+                            )
                         }
                         .padding(.horizontal)
                         
@@ -748,8 +884,16 @@ struct EditTemplateExerciseSheet: View {
                             }
                             .tint(.white)
                             .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.2))
+                            )
+                            .fadeEdgeBorder(
+                                color: .white.opacity(0.4),
+                                cornerRadius: 12,
+                                lineWidth: 1,
+                                fadeStyle: .radial
+                            )
                             
                             if useSameReps {
                                 // Single rep count
@@ -781,8 +925,16 @@ struct EditTemplateExerciseSheet: View {
                                     }
                                 }
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                             } else {
                                 // Rep range
                                 VStack(spacing: 12) {
@@ -824,8 +976,16 @@ struct EditTemplateExerciseSheet: View {
                                         }
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                     
                                     // Max reps
                                     HStack {
@@ -859,8 +1019,16 @@ struct EditTemplateExerciseSheet: View {
                                         }
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                         }
@@ -877,8 +1045,16 @@ struct EditTemplateExerciseSheet: View {
                                 .foregroundColor(.white)
                                 .lineLimit(2...4)
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                         }
                         .padding(.horizontal)
                     }

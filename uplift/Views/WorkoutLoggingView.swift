@@ -56,8 +56,16 @@ struct WorkoutLoggingView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.2))
+                            )
+                            .fadeEdgeBorder(
+                                color: .white.opacity(0.4),
+                                cornerRadius: 12,
+                                lineWidth: 1,
+                                fadeStyle: .radial
+                            )
                         }
                         .padding(.horizontal)
                     }
@@ -163,8 +171,16 @@ struct WorkoutLoggingView: View {
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.white)
-                .cornerRadius(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.white)
+                )
+                .fadeEdgeBorder(
+                    color: .white.opacity(0.6),
+                    cornerRadius: 12,
+                    lineWidth: 1,
+                    fadeStyle: .radial
+                )
         }
         .padding()
         .background(Color.black)
@@ -446,8 +462,16 @@ struct AddExerciseSheet: View {
                             .autocapitalization(.words)
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.gray.opacity(0.2))
+                    )
+                    .fadeEdgeBorder(
+                        color: .white.opacity(0.4),
+                        cornerRadius: 12,
+                        lineWidth: 1,
+                        fadeStyle: .radial
+                    )
                     .padding()
                     
                     ScrollView {
@@ -466,8 +490,16 @@ struct AddExerciseSheet: View {
                                             .foregroundColor(.white)
                                     }
                                     .padding()
-                                    .background(Color.gray.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                             
@@ -485,8 +517,16 @@ struct AddExerciseSheet: View {
                                             .foregroundColor(.green)
                                     }
                                     .padding()
-                                    .background(Color.green.opacity(0.2))
-                                    .cornerRadius(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.green.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .green.opacity(0.5),
+                                        cornerRadius: 12,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
                             }
                         }

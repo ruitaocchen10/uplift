@@ -941,8 +941,16 @@ struct WorkoutDetailSheet: View {
                                     }
                                 }
                                 .padding()
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.gray.opacity(0.2))
+                                )
+                                .fadeEdgeBorder(
+                                    color: .white.opacity(0.4),
+                                    cornerRadius: 12,
+                                    lineWidth: 1,
+                                    fadeStyle: .radial
+                                )
                                 .padding(.horizontal)
                             }
                         }
