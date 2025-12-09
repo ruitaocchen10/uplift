@@ -22,6 +22,38 @@ struct ExerciseDetailView: View {
         ProgressCalculations.filterDataPoints(exerciseStats.volumeHistory, for: selectedTimeRange)
     }
     
+    // MARK: - Normalized Data for 7D Alignment
+    
+    /// Normalize data timestamps to midnight for 7D view to center points under day labels
+    private var normalizedMaxWeightData: [DataPoint] {
+        if selectedTimeRange == .sevenDays {
+            let calendar = Calendar.current
+            return filteredMaxWeightData.map { dataPoint in
+                DataPoint(
+                    date: calendar.startOfDay(for: dataPoint.date),
+                    value: dataPoint.value
+                )
+            }
+        } else {
+            return filteredMaxWeightData
+        }
+    }
+    
+    /// Normalize data timestamps to midnight for 7D view to center points under day labels
+    private var normalizedVolumeData: [DataPoint] {
+        if selectedTimeRange == .sevenDays {
+            let calendar = Calendar.current
+            return filteredVolumeData.map { dataPoint in
+                DataPoint(
+                    date: calendar.startOfDay(for: dataPoint.date),
+                    value: dataPoint.value
+                )
+            }
+        } else {
+            return filteredVolumeData
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -44,9 +76,9 @@ struct ExerciseDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    BackButton{(
+                    BackButton {
                         dismiss()
-                    )}
+                    }
                 }
                 
                 ToolbarItem(placement: .principal) {
@@ -57,7 +89,6 @@ struct ExerciseDetailView: View {
             }
             .standardToolbar()
         }
-        
     }
     
     // MARK: - Time Range Picker
@@ -100,10 +131,10 @@ struct ExerciseDetailView: View {
                 .foregroundColor(.white)
                 .padding(.horizontal)
             
-            if filteredMaxWeightData.isEmpty {
+            if !hasDataForTimeRange(selectedTimeRange) {
                 emptyChartView
             } else {
-                Chart(filteredMaxWeightData) { dataPoint in
+                Chart(normalizedMaxWeightData) { dataPoint in
                     LineMark(
                         x: .value("Date", dataPoint.date),
                         y: .value("Weight", dataPoint.value)
@@ -119,13 +150,17 @@ struct ExerciseDetailView: View {
                 }
                 .chartXScale(domain: getXAxisDomain(timeRange: selectedTimeRange))
                 .chartXAxis {
-                    AxisMarks(values: generateXAxisValues(dataPoints: filteredMaxWeightData, timeRange: selectedTimeRange)) { value in
+                    AxisMarks(
+                        position: .bottom,
+                        values: generateXAxisValues(dataPoints: filteredMaxWeightData, timeRange: selectedTimeRange)
+                    ) { value in
                         if let date = value.as(Date.self) {
                             AxisValueLabel {
                                 Text(formatXAxisLabel(date: date, timeRange: selectedTimeRange))
                                     .font(.futuraCaption())
                                     .foregroundStyle(Color.gray)
                             }
+                            // Grid line only at label positions
                             AxisGridLine()
                                 .foregroundStyle(Color.gray.opacity(0.2))
                         }
@@ -136,6 +171,8 @@ struct ExerciseDetailView: View {
                         AxisValueLabel()
                             .foregroundStyle(Color.gray)
                             .font(.futuraCaption())
+                        AxisGridLine()
+                            .foregroundStyle(Color.gray.opacity(0.1))
                     }
                 }
                 .frame(height: 200)
@@ -167,10 +204,10 @@ struct ExerciseDetailView: View {
                 .foregroundColor(.white)
                 .padding(.horizontal)
             
-            if filteredVolumeData.isEmpty {
+            if !hasDataForTimeRange(selectedTimeRange) {
                 emptyChartView
             } else {
-                Chart(filteredVolumeData) { dataPoint in
+                Chart(normalizedVolumeData) { dataPoint in
                     BarMark(
                         x: .value("Date", dataPoint.date),
                         y: .value("Volume", dataPoint.value)
@@ -179,13 +216,17 @@ struct ExerciseDetailView: View {
                 }
                 .chartXScale(domain: getXAxisDomain(timeRange: selectedTimeRange))
                 .chartXAxis {
-                    AxisMarks(values: generateXAxisValues(dataPoints: filteredVolumeData, timeRange: selectedTimeRange)) { value in
+                    AxisMarks(
+                        position: .bottom,
+                        values: generateXAxisValues(dataPoints: filteredVolumeData, timeRange: selectedTimeRange)
+                    ) { value in
                         if let date = value.as(Date.self) {
                             AxisValueLabel {
                                 Text(formatXAxisLabel(date: date, timeRange: selectedTimeRange))
                                     .font(.futuraCaption())
                                     .foregroundStyle(Color.gray)
                             }
+                            // Grid line only at label positions
                             AxisGridLine()
                                 .foregroundStyle(Color.gray.opacity(0.2))
                         }
@@ -196,6 +237,8 @@ struct ExerciseDetailView: View {
                         AxisValueLabel()
                             .foregroundStyle(Color.gray)
                             .font(.futuraCaption())
+                        AxisGridLine()
+                            .foregroundStyle(Color.gray.opacity(0.1))
                     }
                 }
                 .frame(height: 200)
@@ -256,7 +299,7 @@ struct ExerciseDetailView: View {
         .padding(.horizontal)
     }
     
-    // MARK: - Empty Chart View
+    // MARK: - Enhanced Empty Chart View
     
     private var emptyChartView: some View {
         VStack(spacing: 12) {
@@ -264,12 +307,32 @@ struct ExerciseDetailView: View {
                 .font(.system(size: 40))
                 .foregroundColor(.gray)
             
-            Text("No data for this time range")
-                .font(.futuraBody())
-                .foregroundColor(.gray)
+            // Contextual message based on validation failure
+            let validation = validateDataForTimeRange(selectedTimeRange)
+            
+            if !validation.isValid {
+                // Show what's missing
+                Text(validation.primaryMessage)
+                    .font(.futuraBody())
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                
+                if let detail = validation.detailMessage {
+                    Text(detail)
+                        .font(.futuraSubheadline())
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                }
+                
+                Text(validation.actionMessage)
+                    .font(.futuraSubheadline())
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+            }
         }
         .frame(height: 200)
         .frame(maxWidth: .infinity)
+        .padding(.horizontal, 40)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.gray.opacity(0.1))
@@ -283,37 +346,185 @@ struct ExerciseDetailView: View {
         .padding(.horizontal)
     }
     
-    // MARK: - X-Axis Helpers
+    // MARK: - Data Availability Helpers
     
-    /// Calculate how often to show X-axis labels based on time range
-    private func calculateXAxisStride(timeRange: ProgressCalculations.TimeRange, dataPoints: [DataPoint]) -> (stride: Calendar.Component, value: Int) {
-        guard !dataPoints.isEmpty else { return (.day, 1) }
+    /// Validation result structure
+    private struct DataValidation {
+        let isValid: Bool
+        let primaryMessage: String
+        let detailMessage: String?
+        let actionMessage: String
+    }
+    
+    /// Enhanced validation with minimum points and time span requirements
+    private func validateDataForTimeRange(_ timeRange: ProgressCalculations.TimeRange) -> DataValidation {
+        let filteredData = ProgressCalculations.filterDataPoints(exerciseStats.maxWeightHistory, for: timeRange)
+        
+        // Define requirements for each time range
+        let minPoints: Int
+        let minTimeSpanDays: Int?
         
         switch timeRange {
         case .sevenDays:
-            return (.day, 1)  // Show every day
+            minPoints = 2
+            minTimeSpanDays = 2
+        case .thirtyDays:
+            minPoints = 2
+            minTimeSpanDays = 7
+        case .ninetyDays:
+            minPoints = 3
+            minTimeSpanDays = 30
+        case .all:
+            minPoints = 5
+            minTimeSpanDays = 90
+        }
+        
+        let actualPoints = filteredData.count
+        
+        // Check minimum data points
+        guard actualPoints >= minPoints else {
+            let primaryMessage: String
+            let detailMessage: String?
+            let actionMessage: String
+            
+            if actualPoints == 0 {
+                primaryMessage = "No workouts in the last \(timeRangeLabel)"
+                if lastWorkoutDate != nil {
+                    detailMessage = "Last workout: \(timeSinceLastWorkout())"
+                } else {
+                    detailMessage = nil
+                }
+                actionMessage = "Complete a workout to start tracking!"
+            } else {
+                primaryMessage = "Not enough data for \(timeRangeLabel) view"
+                detailMessage = "You have \(actualPoints) workout\(actualPoints == 1 ? "" : "s") (need \(minPoints)+)"
+                actionMessage = "Keep training to unlock this chart!"
+            }
+            
+            return DataValidation(
+                isValid: false,
+                primaryMessage: primaryMessage,
+                detailMessage: detailMessage,
+                actionMessage: actionMessage
+            )
+        }
+        
+        // Check time span requirement (if applicable)
+        if let requiredSpan = minTimeSpanDays {
+            let dates = filteredData.map { $0.date }.sorted()
+            guard let earliest = dates.first,
+                  let latest = dates.last else {
+                return DataValidation(
+                    isValid: false,
+                    primaryMessage: "Unable to calculate time span",
+                    detailMessage: nil,
+                    actionMessage: "Try again later"
+                )
+            }
+            
+            let calendar = Calendar.current
+            let daysBetween = calendar.dateComponents([.day], from: earliest, to: latest).day ?? 0
+            
+            guard daysBetween >= requiredSpan else {
+                let primaryMessage = "Not enough data for \(timeRangeLabel) view"
+                let detailMessage = "You have \(actualPoints) workout\(actualPoints == 1 ? "" : "s") across \(daysBetween) day\(daysBetween == 1 ? "" : "s")"
+                let actionMessage = "Need \(minPoints)+ workouts across \(requiredSpan)+ days to see progress"
+                
+                return DataValidation(
+                    isValid: false,
+                    primaryMessage: primaryMessage,
+                    detailMessage: detailMessage,
+                    actionMessage: actionMessage
+                )
+            }
+        }
+        
+        // Validation passed
+        return DataValidation(
+            isValid: true,
+            primaryMessage: "",
+            detailMessage: nil,
+            actionMessage: ""
+        )
+    }
+    
+    /// Check if there's sufficient data for the time range (uses enhanced validation)
+    private func hasDataForTimeRange(_ timeRange: ProgressCalculations.TimeRange) -> Bool {
+        return validateDataForTimeRange(timeRange).isValid
+    }
+    
+    /// Get the most recent workout date for this exercise
+    private var lastWorkoutDate: Date? {
+        exerciseStats.maxWeightHistory.map { $0.date }.max()
+    }
+    
+    /// Human-readable time since last workout
+    private func timeSinceLastWorkout() -> String {
+        guard let lastDate = lastWorkoutDate else {
+            return "Never"
+        }
+        
+        let calendar = Calendar.current
+        let now = Date()
+        let components = calendar.dateComponents([.day, .weekOfYear, .month], from: lastDate, to: now)
+        
+        if let months = components.month, months > 0 {
+            return months == 1 ? "1 month ago" : "\(months) months ago"
+        } else if let weeks = components.weekOfYear, weeks > 0 {
+            return weeks == 1 ? "1 week ago" : "\(weeks) weeks ago"
+        } else if let days = components.day, days > 0 {
+            return days == 1 ? "1 day ago" : "\(days) days ago"
+        } else {
+            return "Today"
+        }
+    }
+    
+    /// Get human-readable label for current time range
+    private var timeRangeLabel: String {
+        switch selectedTimeRange {
+        case .sevenDays:
+            return "7 days"
+        case .thirtyDays:
+            return "30 days"
+        case .ninetyDays:
+            return "90 days"
+        case .all:
+            return "all time"
+        }
+    }
+    
+    // MARK: - X-Axis Helpers
+    
+    /// Calculate stride for perfectly even spacing with exact label count
+    private func calculateXAxisStride(timeRange: ProgressCalculations.TimeRange, dataPoints: [DataPoint]) -> Int {
+        switch timeRange {
+        case .sevenDays:
+            // 7 days, 7 labels (one per day)
+            return 1
         
         case .thirtyDays:
-            return (.day, 5)  // Show every 5 days (~6 labels)
+            // 30 days, 6 labels = 5 intervals
+            // 30 / 5 = 6 days stride
+            return 6
         
         case .ninetyDays:
-            return (.day, 15) // Show every 15 days (~6 labels)
+            // 90 days, 6 labels = 5 intervals
+            // 90 / 5 = 18 days stride
+            return 18
         
         case .all:
-            // Calculate based on actual data range
+            // Always 6 labels = 5 intervals for ALL view
+            guard !dataPoints.isEmpty else { return 1 }
+            
             let calendar = Calendar.current
             let daysBetween = calendar.dateComponents([.day],
                 from: dataPoints.first!.date,
                 to: dataPoints.last!.date
             ).day ?? 1
             
-            if daysBetween < 90 {
-                return (.day, max(1, daysBetween / 6))
-            } else if daysBetween < 365 {
-                return (.month, 1)  // Monthly
-            } else {
-                return (.month, 3)  // Quarterly
-            }
+            // Target 6 labels = 5 intervals
+            let stride = max(1, daysBetween / 5)
+            return stride
         }
     }
     
@@ -342,61 +553,62 @@ struct ExerciseDetailView: View {
         return formatter.string(from: date)
     }
     
-    /// Generate specific X-axis date values
+    /// Generate evenly-spaced X-axis date values for perfect grid alignment
     private func generateXAxisValues(dataPoints: [DataPoint], timeRange: ProgressCalculations.TimeRange) -> [Date] {
         let calendar = Calendar.current
-        let today = Date()
+        let today = calendar.startOfDay(for: Date())
         
-        // Calculate start date based on time range
+        // Calculate start date and stride for perfect spacing
         let startDate: Date
+        let stride: Int
+        
         switch timeRange {
         case .sevenDays:
+            // Show all 7 days
             startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+            stride = 1
+        
         case .thirtyDays:
-            startDate = calendar.date(byAdding: .day, value: -29, to: today) ?? today
+            // 30 days with 6 labels = 6 day stride
+            startDate = calendar.date(byAdding: .day, value: -30, to: today) ?? today
+            stride = 6
+        
         case .ninetyDays:
-            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+            // 90 days with 6 labels = 18 day stride
+            startDate = calendar.date(byAdding: .day, value: -90, to: today) ?? today
+            stride = 18
+        
         case .all:
-            // Use actual data range if "all" is selected
-            if let firstDataPoint = dataPoints.first?.date {
-                startDate = firstDataPoint
+            // Use actual data range with calculated stride for 6 labels
+            if let firstDate = dataPoints.first?.date {
+                startDate = calendar.startOfDay(for: firstDate)
+                stride = calculateXAxisStride(timeRange: timeRange, dataPoints: dataPoints)
             } else {
-                startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+                startDate = calendar.date(byAdding: .day, value: -90, to: today) ?? today
+                stride = 18
             }
         }
         
         let endDate = today
         
-        // Get stride for this time range
-        let (strideComponent, strideValue) = calculateXAxisStride(timeRange: timeRange, dataPoints: dataPoints)
-        
+        // Generate evenly-spaced dates
         var dates: [Date] = []
-        var currentDate = calendar.startOfDay(for: startDate)
-        let finalDate = calendar.startOfDay(for: endDate)
+        var currentDate = startDate
         
-        // Always include start date
-        dates.append(currentDate)
-        
-        // Generate intermediate dates
-        while currentDate < finalDate {
-            if let nextDate = calendar.date(byAdding: strideComponent, value: strideValue, to: currentDate) {
-                if nextDate <= finalDate {
-                    dates.append(nextDate)
-                }
+        while currentDate <= endDate {
+            dates.append(currentDate)
+            
+            if let nextDate = calendar.date(byAdding: .day, value: stride, to: currentDate) {
                 currentDate = nextDate
             } else {
                 break
             }
         }
         
-        // Always include end date if not already included
-        if let lastDate = dates.last, !calendar.isDate(lastDate, inSameDayAs: finalDate) {
-            dates.append(finalDate)
-        }
-        
         return dates
     }
     
+    /// Get the full date range for the X-axis domain
     private func getXAxisDomain(timeRange: ProgressCalculations.TimeRange) -> ClosedRange<Date> {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -404,14 +616,24 @@ struct ExerciseDetailView: View {
         let startDate: Date
         switch timeRange {
         case .sevenDays:
+            // 7 days: today - 6 days
             startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+        
         case .thirtyDays:
-            startDate = calendar.date(byAdding: .day, value: -29, to: today) ?? today
+            // 30 days: today - 30 days
+            startDate = calendar.date(byAdding: .day, value: -30, to: today) ?? today
+        
         case .ninetyDays:
-            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+            // 90 days: today - 90 days
+            startDate = calendar.date(byAdding: .day, value: -90, to: today) ?? today
+        
         case .all:
-            // For "all", we'll use 90 days as default if no data
-            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+            // For "all", use the actual data range
+            if let firstDate = exerciseStats.maxWeightHistory.first?.date {
+                startDate = calendar.startOfDay(for: firstDate)
+            } else {
+                startDate = calendar.date(byAdding: .day, value: -90, to: today) ?? today
+            }
         }
         
         return startDate...today
