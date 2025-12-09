@@ -31,45 +31,7 @@ struct WorkoutLoggingView: View {
                 
                 // Exercise List
                 ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(workout.exercises) { exercise in
-                            ExerciseCardView(
-                                exercise: exercise,
-                                onDelete: {
-                                    if let index = workout.exercises.firstIndex(where: { $0.id == exercise.id }) {
-                                        workout.exercises.remove(at: index)
-                                    }
-                                }
-                            )
-                        }
-                        
-                        // Add Exercise Button
-                        Button(action: {
-                            showingAddExercise = true
-                        }) {
-                            HStack {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.futuraTitle3())
-                                Text("Add Exercise")
-                                    .font(.futuraHeadline())
-                            }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.gray.opacity(0.2))
-                            )
-                            .fadeEdgeBorder(
-                                color: .white.opacity(0.4),
-                                cornerRadius: 12,
-                                lineWidth: 1,
-                                fadeStyle: .radial
-                            )
-                        }
-                        .padding(.horizontal)
-                    }
-                    .padding(.vertical)
+                    exerciseList
                 }
                 
                 // Finish Workout Button
@@ -87,8 +49,9 @@ struct WorkoutLoggingView: View {
             
             ToolbarItem(placement: .principal) {
                 VStack(spacing: 4) {
-                    Text(workout.templateName ?? "Workout")
+                    Text(workout.templateName  ?? "Workout")
                         .font(.futuraHeadline())
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                     
                     Text("\(workout.completedSets)/\(workout.totalSets) sets")
@@ -124,6 +87,33 @@ struct WorkoutLoggingView: View {
         }
     }
     
+    // MARK: - Exercise List
+    
+    private var exerciseList: some View {
+        VStack(spacing: 12) {
+            ForEach(workout.exercises) { exercise in
+                ExerciseCardView(
+                    exercise: exercise,
+                    onDelete: {
+                        if let index = workout.exercises.firstIndex(where: { $0.id == exercise.id }) {
+                            workout.exercises.remove(at: index)
+                        }
+                    }
+                )
+            }
+            
+            ActionButton(
+                title: "Add Exercise",
+                icon: "plus.circle.fill",
+                style: .secondary
+            ) {
+                showingAddExercise = true
+            }
+            .padding(.horizontal)
+        }
+        .padding(.vertical)
+    }
+    
     // MARK: - Workout Progress Bar
     
     private var workoutProgressBar: some View {
@@ -146,7 +136,10 @@ struct WorkoutLoggingView: View {
     // MARK: - Finish Workout Button
     
     private var finishWorkoutButton: some View {
-        Button(action: {
+        ActionButton(
+            title: "Finish Workout",
+            style: .primary
+        ) {
             if shouldAutoComplete {
                 workout.isCompleted = true
                 try? modelContext.save()
@@ -154,22 +147,6 @@ struct WorkoutLoggingView: View {
             } else {
                 showingFinishConfirmation = true
             }
-        }) {
-            Text("Finish Workout")
-                .font(.futuraHeadline())
-                .foregroundColor(.black)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.white)
-                )
-                .fadeEdgeBorder(
-                    color: .white.opacity(0.6),
-                    cornerRadius: 12,
-                    lineWidth: 1,
-                    fadeStyle: .radial
-                )
         }
         .padding()
         .background(Color.black)
@@ -330,7 +307,7 @@ struct SetRowView: View {
     }
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             // Set Number
             Text("\(setNumber)")
                 .font(.futuraBody())
@@ -338,13 +315,13 @@ struct SetRowView: View {
                 .frame(width: 40)
             
             // Weight Input
-            VStack(spacing: 4) {
+            VStack(alignment: .center, spacing: 4) {
                 Text("lbs")
                     .font(.futuraCaption())
                     .foregroundColor(.gray)
                 
                 TextField("0", value: $localWeight, format: .number)
-                    .keyboardType(.decimalPad)
+                    .keyboardType(.default)
                     .multilineTextAlignment(.center)
                     .font(.futuraBody())
                     .foregroundColor(.white)
@@ -359,13 +336,13 @@ struct SetRowView: View {
             .frame(width: 80)
             
             // Reps Input
-            VStack(spacing: 4) {
+            VStack(alignment: .center, spacing: 4) {
                 Text("reps")
                     .font(.futuraCaption())
                     .foregroundColor(.gray)
                 
                 TextField("0", value: $localReps, format: .number)
-                    .keyboardType(.numberPad)
+                    .keyboardType(.default)
                     .multilineTextAlignment(.center)
                     .font(.futuraBody())
                     .foregroundColor(.white)

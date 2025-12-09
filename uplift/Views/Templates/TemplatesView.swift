@@ -63,7 +63,7 @@ struct TemplatesView: View {
                                 // All Templates Section
                                 VStack(alignment: .leading, spacing: 12) {
                                     Text(favoriteTemplates.isEmpty ? "Templates" : "All Templates")
-                                        .font(.futuraHeadline())
+                                        .font(.futuraTitle3())
                                         .foregroundColor(.white)
                                         .padding(.horizontal)
                                     
@@ -150,25 +150,13 @@ struct TemplatesView: View {
                     .padding(.horizontal, 40)
             }
             
-            Button(action: {
+            ActionButton(
+                title: "Create Your First Template",
+                style: .primary
+            ) {
                 showingCreateTemplate = true
-            }) {
-                Text("Create Your First Template")
-                    .font(.futuraHeadline())
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(maxWidth: 300)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.white)
-                    )
-                    .fadeEdgeBorder(
-                        color: .white.opacity(0.6),
-                        cornerRadius: 12,
-                        lineWidth: 1,
-                        fadeStyle: .radial
-                    )
             }
+            .frame(maxWidth: 300)
         }
     }
     

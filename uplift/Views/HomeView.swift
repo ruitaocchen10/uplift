@@ -70,119 +70,7 @@ struct HomeView: View {
                     
                     // Content based on selected date
                     ScrollView {
-                        VStack(spacing: 16) {
-                            // Show completed workouts
-                            if !completedWorkouts.isEmpty {
-                                ForEach(completedWorkouts) { workout in
-                                    CompletedWorkoutCard(workout: workout)
-                                        .onTapGesture {
-                                            showingWorkoutDetail = workout
-                                        }
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            workoutToDelete = workout
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete Workout", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Show scheduled workouts (future)
-                            if !scheduledWorkouts.isEmpty {
-                                ForEach(scheduledWorkouts) { workout in
-                                    ScheduledWorkoutCard(workout: workout) {
-                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workoutManager.workouts[index]
-                                        }
-                                    }
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            workoutToDelete = workout
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete Workout", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Show in-progress workouts
-                            if !inProgressWorkouts.isEmpty {
-                                ForEach(inProgressWorkouts) { workout in
-                                    InProgressWorkoutCard(workout: workout) {
-                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workoutManager.workouts[index]
-                                        }
-                                    }
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            workoutToDelete = workout
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete Workout", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Show not started today workouts
-                            if !notStartedTodayWorkouts.isEmpty {
-                                ForEach(notStartedTodayWorkouts) { workout in
-                                    NotStartedTodayCard(workout: workout) {
-                                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
-                                            workoutToEdit = workoutManager.workouts[index]
-                                        }
-                                    }
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            workoutToDelete = workout
-                                            showingDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete Workout", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Show appropriate empty state or add button
-                            if !hasWorkoutsOnSelectedDate {
-                                EmptyDateView(
-                                    isToday: isSelectedDateToday,
-                                    isFuture: isSelectedDateFuture,
-                                    isPast: isSelectedDatePast,
-                                    onAddWorkout: {
-                                        showingTemplateSelector = true
-                                    }
-                                )
-                            } else {
-                                // Allow adding another workout
-                                Button(action: {
-                                    showingTemplateSelector = true
-                                }) {
-                                    HStack {
-                                        Image(systemName: "plus.circle")
-                                            .font(.futuraTitle3())
-                                        Text(addWorkoutButtonText)
-                                            .font(.futuraHeadline())
-                                    }
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                                    .background(
-                                        Capsule()
-                                            .fill(Color.gray.opacity(0.15))
-                                    )
-                                    .overlay(
-                                        Capsule()
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.bottom, 20)
+                        workoutListContent
                     }
                 }
             }
@@ -250,6 +138,128 @@ struct HomeView: View {
                     }
                 }
             }
+        }
+    }
+
+    // MARK: - Workout List Content
+
+    private var workoutListContent: some View {
+        VStack(spacing: 16) {
+            // Show completed workouts
+            if !completedWorkouts.isEmpty {
+                ForEach(completedWorkouts) { workout in
+                    CompletedWorkoutCard(workout: workout)
+                        .onTapGesture {
+                            showingWorkoutDetail = workout
+                        }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                workoutToDelete = workout
+                                showingDeleteConfirmation = true
+                            } label: {
+                                Label("Delete Workout", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+            
+            // Show scheduled workouts (future)
+            if !scheduledWorkouts.isEmpty {
+                ForEach(scheduledWorkouts) { workout in
+                    ScheduledWorkoutCard(workout: workout, onStart: {
+                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                            workoutToEdit = workoutManager.workouts[index]
+                        }
+                    })
+                        .onTapGesture {
+                            if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                workoutToEdit = workoutManager.workouts[index]
+                            }
+                        }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                workoutToDelete = workout
+                                showingDeleteConfirmation = true
+                            } label: {
+                                Label("Delete Workout", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+            
+            // Show in-progress workouts
+            if !inProgressWorkouts.isEmpty {
+                ForEach(inProgressWorkouts) { workout in
+                    InProgressWorkoutCard(workout: workout, onResume: {
+                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                            workoutToEdit = workoutManager.workouts[index]
+                        }
+                    })
+                        .onTapGesture {
+                            if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                workoutToEdit = workoutManager.workouts[index]
+                            }
+                        }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                workoutToDelete = workout
+                                showingDeleteConfirmation = true
+                            } label: {
+                                Label("Delete Workout", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+            
+            // Show not started today workouts
+            if !notStartedTodayWorkouts.isEmpty {
+                ForEach(notStartedTodayWorkouts) { workout in
+                    NotStartedTodayCard(workout: workout, onStart: {
+                        if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                            workoutToEdit = workoutManager.workouts[index]
+                        }
+                    })
+                        .onTapGesture {
+                            if let index = workoutManager.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                workoutToEdit = workoutManager.workouts[index]
+                            }
+                        }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                workoutToDelete = workout
+                                showingDeleteConfirmation = true
+                            } label: {
+                                Label("Delete Workout", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+            
+            // Show appropriate empty state or add button
+            if !hasWorkoutsOnSelectedDate {
+                EmptyDateView(
+                    isToday: isSelectedDateToday,
+                    isFuture: isSelectedDateFuture,
+                    isPast: isSelectedDatePast,
+                    onAddWorkout: {
+                        showingTemplateSelector = true
+                    }
+                )
+            } else {
+                addAnotherWorkoutButton
+            }
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 20)
+    }
+
+    private var addAnotherWorkoutButton: some View {
+        ActionButton(
+            title: addWorkoutButtonText,
+            icon: "plus.circle",
+            style: .secondary
+        ) {
+            showingTemplateSelector = true
         }
     }
     
@@ -528,18 +538,9 @@ struct ScheduledWorkoutCard: View {
                     .font(.futuraTitle3())
             }
             
-            Button(action: onStart) {
-                Text("View Workout")
-                    .font(.futuraHeadline())
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        Capsule()
-                            .fill(Color.blue)
-                    )
-                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
-            }
+            Text("Tap to view details")
+                .font(.futuraCaption())
+                .foregroundColor(.gray)
         }
         .padding()
         .background(
@@ -586,18 +587,9 @@ struct InProgressWorkoutCard: View {
                     .font(.futuraTitle3())
             }
             
-            Button(action: onResume) {
-                Text("Resume Workout")
-                    .font(.futuraHeadline())
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        Capsule()  // Fully pill-shaped
-                            .fill(Color.orange)
-                    )
-                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)  // Subtle shadow
-            }
+            Text("Tap to view details")
+                .font(.futuraCaption())
+                .foregroundColor(.gray)
         }
         .padding()
         .background(
@@ -637,18 +629,9 @@ struct NotStartedTodayCard: View {
                     .font(.futuraTitle3())
             }
             
-            Button(action: onStart) {
-                Text("Start Workout")
-                    .font(.futuraHeadline())
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        Capsule()
-                            .fill(Color.green)
-                    )
-                    .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
-            }
+            Text("Tap to view details")
+                .font(.futuraCaption())
+                .foregroundColor(.gray)
         }
         .padding()
         .background(
@@ -712,20 +695,12 @@ struct EmptyDateView: View {
             
             Spacer()
             
-            Button(action: onAddWorkout) {
-                HStack {
-                    Image(systemName: "plus.circle")
-                        .font(.futuraTitle3())
-                    Text(buttonText)
-                        .font(.futuraHeadline())
-                }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(
-                    Capsule()
-                        .fill(Color.gray.opacity(0.15))
-                )
+            ActionButton(
+                title: buttonText,
+                icon: "plus.circle",
+                style: .secondary
+            ) {
+                onAddWorkout()
             }
         }
         .padding(.vertical, 20)

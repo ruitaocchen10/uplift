@@ -57,6 +57,7 @@ struct ExerciseDetailView: View {
             }
             .standardToolbar()
         }
+        
     }
     
     // MARK: - Time Range Picker
@@ -116,11 +117,18 @@ struct ExerciseDetailView: View {
                     )
                     .foregroundStyle(Color.green)
                 }
+                .chartXScale(domain: getXAxisDomain(timeRange: selectedTimeRange))
                 .chartXAxis {
-                    AxisMarks(values: .automatic) { _ in
-                        AxisValueLabel()
-                            .foregroundStyle(Color.gray)
-                            .font(.futuraCaption())
+                    AxisMarks(values: generateXAxisValues(dataPoints: filteredMaxWeightData, timeRange: selectedTimeRange)) { value in
+                        if let date = value.as(Date.self) {
+                            AxisValueLabel {
+                                Text(formatXAxisLabel(date: date, timeRange: selectedTimeRange))
+                                    .font(.futuraCaption())
+                                    .foregroundStyle(Color.gray)
+                            }
+                            AxisGridLine()
+                                .foregroundStyle(Color.gray.opacity(0.2))
+                        }
                     }
                 }
                 .chartYAxis {
@@ -169,11 +177,18 @@ struct ExerciseDetailView: View {
                     )
                     .foregroundStyle(Color.green)
                 }
+                .chartXScale(domain: getXAxisDomain(timeRange: selectedTimeRange))
                 .chartXAxis {
-                    AxisMarks(values: .automatic) { _ in
-                        AxisValueLabel()
-                            .foregroundStyle(Color.gray)
-                            .font(.futuraCaption())
+                    AxisMarks(values: generateXAxisValues(dataPoints: filteredVolumeData, timeRange: selectedTimeRange)) { value in
+                        if let date = value.as(Date.self) {
+                            AxisValueLabel {
+                                Text(formatXAxisLabel(date: date, timeRange: selectedTimeRange))
+                                    .font(.futuraCaption())
+                                    .foregroundStyle(Color.gray)
+                            }
+                            AxisGridLine()
+                                .foregroundStyle(Color.gray.opacity(0.2))
+                        }
                     }
                 }
                 .chartYAxis {
@@ -266,6 +281,140 @@ struct ExerciseDetailView: View {
             fadeStyle: .radial
         )
         .padding(.horizontal)
+    }
+    
+    // MARK: - X-Axis Helpers
+    
+    /// Calculate how often to show X-axis labels based on time range
+    private func calculateXAxisStride(timeRange: ProgressCalculations.TimeRange, dataPoints: [DataPoint]) -> (stride: Calendar.Component, value: Int) {
+        guard !dataPoints.isEmpty else { return (.day, 1) }
+        
+        switch timeRange {
+        case .sevenDays:
+            return (.day, 1)  // Show every day
+        
+        case .thirtyDays:
+            return (.day, 5)  // Show every 5 days (~6 labels)
+        
+        case .ninetyDays:
+            return (.day, 15) // Show every 15 days (~6 labels)
+        
+        case .all:
+            // Calculate based on actual data range
+            let calendar = Calendar.current
+            let daysBetween = calendar.dateComponents([.day],
+                from: dataPoints.first!.date,
+                to: dataPoints.last!.date
+            ).day ?? 1
+            
+            if daysBetween < 90 {
+                return (.day, max(1, daysBetween / 6))
+            } else if daysBetween < 365 {
+                return (.month, 1)  // Monthly
+            } else {
+                return (.month, 3)  // Quarterly
+            }
+        }
+    }
+    
+    /// Format date labels based on time range
+    private func formatXAxisLabel(date: Date, timeRange: ProgressCalculations.TimeRange) -> String {
+        let formatter = DateFormatter()
+        
+        switch timeRange {
+        case .sevenDays:
+            // "M", "T", "W", "T", "F", "S", "S"
+            formatter.dateFormat = "EEEEE"  // Single letter day
+            
+        case .thirtyDays:
+            // "12/01", "12/06", "12/11"
+            formatter.dateFormat = "MM/dd"
+            
+        case .ninetyDays:
+            // "10/15", "11/01", "11/15", "12/01"
+            formatter.dateFormat = "MM/dd"
+            
+        case .all:
+            // "06/23", "09/23", "12/23"
+            formatter.dateFormat = "MM/yy"
+        }
+        
+        return formatter.string(from: date)
+    }
+    
+    /// Generate specific X-axis date values
+    private func generateXAxisValues(dataPoints: [DataPoint], timeRange: ProgressCalculations.TimeRange) -> [Date] {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        // Calculate start date based on time range
+        let startDate: Date
+        switch timeRange {
+        case .sevenDays:
+            startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+        case .thirtyDays:
+            startDate = calendar.date(byAdding: .day, value: -29, to: today) ?? today
+        case .ninetyDays:
+            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+        case .all:
+            // Use actual data range if "all" is selected
+            if let firstDataPoint = dataPoints.first?.date {
+                startDate = firstDataPoint
+            } else {
+                startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+            }
+        }
+        
+        let endDate = today
+        
+        // Get stride for this time range
+        let (strideComponent, strideValue) = calculateXAxisStride(timeRange: timeRange, dataPoints: dataPoints)
+        
+        var dates: [Date] = []
+        var currentDate = calendar.startOfDay(for: startDate)
+        let finalDate = calendar.startOfDay(for: endDate)
+        
+        // Always include start date
+        dates.append(currentDate)
+        
+        // Generate intermediate dates
+        while currentDate < finalDate {
+            if let nextDate = calendar.date(byAdding: strideComponent, value: strideValue, to: currentDate) {
+                if nextDate <= finalDate {
+                    dates.append(nextDate)
+                }
+                currentDate = nextDate
+            } else {
+                break
+            }
+        }
+        
+        // Always include end date if not already included
+        if let lastDate = dates.last, !calendar.isDate(lastDate, inSameDayAs: finalDate) {
+            dates.append(finalDate)
+        }
+        
+        return dates
+    }
+    
+    private func getXAxisDomain(timeRange: ProgressCalculations.TimeRange) -> ClosedRange<Date> {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        
+        let startDate: Date
+        switch timeRange {
+        case .sevenDays:
+            startDate = calendar.date(byAdding: .day, value: -6, to: today) ?? today
+        case .thirtyDays:
+            startDate = calendar.date(byAdding: .day, value: -29, to: today) ?? today
+        case .ninetyDays:
+            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+        case .all:
+            // For "all", we'll use 90 days as default if no data
+            startDate = calendar.date(byAdding: .day, value: -89, to: today) ?? today
+        }
+        
+        return startDate...today
     }
     
     // MARK: - Helper Methods

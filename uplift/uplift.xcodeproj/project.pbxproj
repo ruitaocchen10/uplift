@@ -24,6 +24,7 @@
 		2661CD942EE77DAD00867E4D /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD932EE77DAD00867E4D /* DoneButton.swift */; };
 		2661CD962EE77DB800867E4D /* HeaderTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD952EE77DB800867E4D /* HeaderTitle.swift */; };
 		2661CD982EE77DD200867E4D /* ToolbarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD972EE77DD200867E4D /* ToolbarConfig.swift */; };
+		2661CD9F2EE7C61E00867E4D /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD9E2EE7C61B00867E4D /* ActionButton.swift */; };
 		269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */; };
 		269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F52EE1E60500CEFB6F /* ProgressView.swift */; };
 		269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */; };
@@ -55,6 +56,7 @@
 		2661CD932EE77DAD00867E4D /* DoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoneButton.swift; sourceTree = "<group>"; };
 		2661CD952EE77DB800867E4D /* HeaderTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitle.swift; sourceTree = "<group>"; };
 		2661CD972EE77DD200867E4D /* ToolbarConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarConfig.swift; sourceTree = "<group>"; };
+		2661CD9E2EE7C61B00867E4D /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
 		269686F52EE1E60500CEFB6F /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCalculations.swift; sourceTree = "<group>"; };
@@ -124,6 +126,22 @@
 			path = Workout;
 			sourceTree = "<group>";
 		};
+		2661CD9C2EE7C60E00867E4D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2661CD9D2EE7C61800867E4D /* Buttons */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2661CD9D2EE7C61800867E4D /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				2661CD9E2EE7C61B00867E4D /* ActionButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
 		269686F92EE21DAF00CEFB6F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +197,7 @@
 		26AE90E02EE0A6E200B2BE71 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2661CD9C2EE7C60E00867E4D /* Components */,
 				2661CD9B2EE79F5E00867E4D /* Workout */,
 				2661CD9A2EE79F4000867E4D /* Progress */,
 				2661CD992EE79F2500867E4D /* Templates */,
@@ -286,6 +305,7 @@
 				269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */,
 				262479342EE1D44A0029083B /* DummyData.swift in Sources */,
 				262479362EE1DB330029083B /* TemplatesView.swift in Sources */,
+				2661CD9F2EE7C61E00867E4D /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

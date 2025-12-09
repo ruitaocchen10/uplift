@@ -159,29 +159,12 @@ struct CreateEditTemplateView: View {
                                 }
                             }
                             
-                            // Add Exercise Button
-                            Button(action: {
+                            ActionButton(
+                                title: "Add Exercise",
+                                icon: "plus.circle.fill",
+                                style: .secondary
+                            ) {
                                 showingAddExercise = true
-                            }) {
-                                HStack {
-                                    Image(systemName: "plus.circle.fill")
-                                        .font(.futuraTitle3())
-                                    Text("Add Exercise")
-                                        .font(.futuraHeadline())
-                                }
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.gray.opacity(0.2))
-                                )
-                                .fadeEdgeBorder(
-                                    color: .white.opacity(0.4),
-                                    cornerRadius: 12,
-                                    lineWidth: 1,
-                                    fadeStyle: .radial
-                                )
                             }
                             .padding(.horizontal)
                         }
@@ -189,13 +172,16 @@ struct CreateEditTemplateView: View {
                     .padding(.vertical)
                 }
             }
-            .navigationTitle(template == nil ? "Create Template" : "Edit Template")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     CancelButton {
                         dismiss()
                     }
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(title: template == nil ? "Create Template" : "Edit Template")
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
