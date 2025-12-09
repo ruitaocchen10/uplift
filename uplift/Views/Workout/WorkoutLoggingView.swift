@@ -26,8 +26,8 @@ struct WorkoutLoggingView: View {
             Color.black.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Header
-                headerView
+                // Progress bar (keep this at top)
+                workoutProgressBar
                 
                 // Exercise List
                 ScrollView {
@@ -77,6 +77,41 @@ struct WorkoutLoggingView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton {
+                    dismiss()
+                }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                VStack(spacing: 4) {
+                    Text(workout.templateName ?? "Workout")
+                        .font(.futuraHeadline())
+                        .foregroundColor(.white)
+                    
+                    Text("\(workout.completedSets)/\(workout.totalSets) sets")
+                        .font(.futuraCaption())
+                        .foregroundColor(.gray)
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                MenuButton {
+                    showingCancelConfirmation = true
+                }
+            }
+        }
+        .standardToolbar()
+        .alert("Cancel Workout?", isPresented: $showingCancelConfirmation) {
+            Button("Keep Editing", role: .cancel) {}
+            Button("Discard Workout", role: .destructive) {
+                dismiss()
+            }
+        } message: {
+            Text("This will discard all your progress.")
+        }
         .sheet(isPresented: $showingAddExercise) {
             AddExerciseSheet { exerciseName in
                 let newExercise = Exercise(
@@ -89,69 +124,23 @@ struct WorkoutLoggingView: View {
         }
     }
     
-    // MARK: - Header View
+    // MARK: - Workout Progress Bar
     
-    private var headerView: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.futuraTitle3())
-                        .foregroundColor(.white)
-                }
+    private var workoutProgressBar: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 4)
                 
-                Spacer()
-                
-                VStack(spacing: 4) {
-                    Text(workout.templateName ?? "Workout")
-                        .font(.futuraHeadline())
-                        .foregroundColor(.white)
-                    
-                    Text("\(workout.completedSets)/\(workout.totalSets) sets")
-                        .font(.futuraCaption())
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    showingCancelConfirmation = true
-                }) {
-                    Image(systemName: "ellipsis")
-                        .font(.futuraTitle3())
-                        .foregroundColor(.white)
-                }
+                Rectangle()
+                    .fill(Color.white)
+                    .frame(width: geometry.size.width * workout.progressPercentage, height: 4)
             }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            
-            // Progress bar
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(height: 4)
-                    
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(width: geometry.size.width * workout.progressPercentage, height: 4)
-                }
-            }
-            .frame(height: 4)
-            .padding(.horizontal)
         }
-        .padding(.bottom, 12)
-        .background(Color.black)
-        .alert("Cancel Workout?", isPresented: $showingCancelConfirmation) {
-            Button("Keep Editing", role: .cancel) {}
-            Button("Discard Workout", role: .destructive) {
-                dismiss()
-            }
-        } message: {
-            Text("This will discard all your progress.")
-        }
+        .frame(height: 4)
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
     
     // MARK: - Finish Workout Button
@@ -539,12 +528,12 @@ struct AddExerciseSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                    CancelButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
             }
+            .standardToolbar()
         }
     }
 }

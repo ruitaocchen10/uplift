@@ -64,10 +64,7 @@ struct HomeView: View {
             ZStack {
                 Color.black.ignoresSafeArea()
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    // Header
-                    headerView
-                    
+                VStack(alignment: .leading, spacing: 24) {
                     // Calendar Week View with Navigation
                     calendarSection
                     
@@ -188,8 +185,27 @@ struct HomeView: View {
                         .padding(.bottom, 20)
                     }
                 }
-                .padding(.top)
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    UserInitialsButton(initials: "RC", action: nil)
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(
+                        title: "Ruitao Chen",
+                        subtitle: "Welcome back"
+                    )
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    SearchButton {
+                        // TODO: Implement search
+                    }
+                }
+            }
+            .standardToolbar()
             .sheet(isPresented: $showingTemplateSelector) {
                 TemplateSelectionSheet(
                     templates: workoutManager.templates,
@@ -238,50 +254,6 @@ struct HomeView: View {
     }
     
     // MARK: - View Components
-    
-    private var headerView: some View {
-        HStack(spacing: 16) {
-            // User initials circle on the left
-            ZStack {
-                Circle()
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 44, height: 44)
-                
-                Text("RC")  // User initials
-                    .font(.futuraHeadline())
-                    .foregroundColor(.white)
-            }
-            
-            Spacer()
-            
-            // Centered welcome text
-            VStack(spacing: 2) {
-                Text("Welcome back")
-                    .font(.futuraSubheadline())
-                    .foregroundColor(.gray)
-                Text("Ruitao Chen")
-                        .font(.futuraTitle3())
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-            
-            Spacer()
-            
-            // Search button on the right
-            Button(action: {}) {
-                ZStack {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 44, height: 44)
-                    
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
     
     private var calendarSection: some View {
         VStack(spacing: 12) {
@@ -338,6 +310,7 @@ struct HomeView: View {
                     }
             )
         }
+        .padding(.vertical)
     }
     
     // MARK: - Helper Methods
@@ -631,7 +604,6 @@ struct InProgressWorkoutCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(red: 0.3, green: 0.2, blue: 0.15))
         )
-        // VERSION 1: Radial glow effect
         .fadeEdgeBorder(
             color: .white,
             cornerRadius: 16,
@@ -683,7 +655,6 @@ struct NotStartedTodayCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(red: 0.1, green: 0.25, blue: 0.2))
         )
-        // VERSION 1: Radial glow effect
         .fadeEdgeBorder(
             color: .white,
             cornerRadius: 16,
@@ -756,14 +727,8 @@ struct EmptyDateView: View {
                         .fill(Color.gray.opacity(0.15))
                 )
             }
-            .fadeEdgeBorder(
-                color: .white,
-                cornerRadius: 100,  // Use large value for capsule shape
-                lineWidth: 1,
-                fadeStyle: .horizontal
-            )
         }
-        .padding(.vertical, 40)
+        .padding(.vertical, 20)
     }
 }
 
@@ -780,69 +745,69 @@ struct TemplateSelectionSheet: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Custom Header
-                HStack {
-                    Text("Select Template")
-                        .font(.futuraTitle2())
-                        .foregroundColor(.white)
-                    
-                    Spacer()
-                    
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .foregroundColor(.white)
-                    .font(.futuraBody())
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 16)
+        NavigationStack {
+            ZStack {
+                Color.black.ignoresSafeArea()
                 
-                // Template List
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(templates) { template in
-                            Button(action: {
-                                onTemplateSelected(template)
-                                dismiss()
-                            }) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(template.name)
-                                            .font(.futuraHeadline())
-                                            .foregroundColor(.white)
+                VStack(spacing: 0) {
+                    // Template List
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(templates) { template in
+                                Button(action: {
+                                    onTemplateSelected(template)
+                                    dismiss()
+                                }) {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(template.name)
+                                                .font(.futuraHeadline())
+                                                .foregroundColor(.white)
+                                            
+                                            Text("\(template.totalExercises) exercises")
+                                                .font(.futuraSubheadline())
+                                                .foregroundColor(.gray)
+                                        }
                                         
-                                        Text("\(template.totalExercises) exercises")
-                                            .font(.futuraSubheadline())
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.right")
                                             .foregroundColor(.gray)
                                     }
-                                    
-                                    Spacer()
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.gray)
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .fill(Color.gray.opacity(0.2))
+                                    )
+                                    .fadeEdgeBorder(
+                                        color: .white.opacity(0.4),
+                                        cornerRadius: 16,
+                                        lineWidth: 1,
+                                        fadeStyle: .radial
+                                    )
                                 }
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(Color.gray.opacity(0.2))
-                                )
-                                .fadeEdgeBorder(
-                                    color: .white.opacity(0.4),
-                                    cornerRadius: 16,
-                                    lineWidth: 1,
-                                    fadeStyle: .radial
-                                )
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .buttonStyle(PlainButtonStyle())
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(
+                        title: "Select Template"
+                    )
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    CancelButton{(
+                        dismiss()
+                    )}
+                }
+            }
+            .standardToolbar()
         }
     }
 }
@@ -869,12 +834,12 @@ struct FullCalendarPicker: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    DoneButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
             }
+            .standardToolbar()
         }
     }
 }
@@ -962,12 +927,12 @@ struct WorkoutDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    DoneButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
             }
+            .standardToolbar()
         }
     }
 }

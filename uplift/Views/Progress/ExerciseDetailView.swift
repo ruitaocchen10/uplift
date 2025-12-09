@@ -41,18 +41,21 @@ struct ExerciseDetailView: View {
                     .padding(.vertical)
                 }
             }
-            .navigationTitle(exerciseStats.exerciseName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    BackButton{(
                         dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
-                    }
+                    )}
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(
+                        title: exerciseStats.exerciseName
+                    )
                 }
             }
+            .standardToolbar()
         }
     }
     

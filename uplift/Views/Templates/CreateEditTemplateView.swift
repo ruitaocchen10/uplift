@@ -193,20 +193,18 @@ struct CreateEditTemplateView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    CancelButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    SaveButton(enabled: isValid) {
                         saveTemplate()
                     }
-                    .foregroundColor(isValid ? .white : .gray)
-                    .disabled(!isValid)
                 }
             }
+            .standardToolbar()
             .sheet(isPresented: $showingAddExercise) {
                 AddTemplateExerciseSheet { exercise in
                     exercises.append(exercise)
@@ -431,12 +429,12 @@ struct AddTemplateExerciseSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                    CancelButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
             }
+            .standardToolbar()
             .sheet(item: $selectedExercise) { selected in
                 ConfigureExerciseSheet(
                     exerciseName: selected.name,
@@ -739,14 +737,13 @@ struct ConfigureExerciseSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    CancelButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add") {
+                    SaveButton(enabled: isValid) {
                         let exercise = TemplateExercise(
                             name: exerciseName,
                             targetSets: targetSets,
@@ -757,10 +754,9 @@ struct ConfigureExerciseSheet: View {
                         onSave(exercise)
                         dismiss()
                     }
-                    .foregroundColor(isValid ? .white : .gray)
-                    .disabled(!isValid)
                 }
             }
+            .standardToolbar()
         }
     }
 }
@@ -1065,14 +1061,13 @@ struct EditTemplateExerciseSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    CancelButton {
                         dismiss()
                     }
-                    .foregroundColor(.white)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    SaveButton(enabled: isValid) {
                         let updatedExercise = TemplateExercise(
                             name: exercise.name,
                             targetSets: targetSets,
@@ -1083,10 +1078,9 @@ struct EditTemplateExerciseSheet: View {
                         onSave(updatedExercise)
                         dismiss()
                     }
-                    .foregroundColor(isValid ? .white : .gray)
-                    .disabled(!isValid)
                 }
             }
+            .standardToolbar()
         }
     }
 }

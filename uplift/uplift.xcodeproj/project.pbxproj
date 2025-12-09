@@ -14,6 +14,16 @@
 		262479342EE1D44A0029083B /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479332EE1D4470029083B /* DummyData.swift */; };
 		262479362EE1DB330029083B /* TemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479352EE1DB2F0029083B /* TemplatesView.swift */; };
 		262479382EE1DB510029083B /* CreateEditTemplateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */; };
+		2661CD862EE77D8000867E4D /* UserInitialsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */; };
+		2661CD882EE77D8500867E4D /* SearchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD872EE77D8500867E4D /* SearchButton.swift */; };
+		2661CD8A2EE77D8C00867E4D /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD892EE77D8C00867E4D /* AddButton.swift */; };
+		2661CD8C2EE77D9400867E4D /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD8B2EE77D9400867E4D /* SaveButton.swift */; };
+		2661CD8E2EE77D9A00867E4D /* CancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD8D2EE77D9A00867E4D /* CancelButton.swift */; };
+		2661CD902EE77DA100867E4D /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD8F2EE77DA100867E4D /* BackButton.swift */; };
+		2661CD922EE77DA700867E4D /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD912EE77DA700867E4D /* MenuButton.swift */; };
+		2661CD942EE77DAD00867E4D /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD932EE77DAD00867E4D /* DoneButton.swift */; };
+		2661CD962EE77DB800867E4D /* HeaderTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD952EE77DB800867E4D /* HeaderTitle.swift */; };
+		2661CD982EE77DD200867E4D /* ToolbarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD972EE77DD200867E4D /* ToolbarConfig.swift */; };
 		269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */; };
 		269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F52EE1E60500CEFB6F /* ProgressView.swift */; };
 		269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */; };
@@ -35,6 +45,16 @@
 		262479332EE1D4470029083B /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		262479352EE1DB2F0029083B /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
 		262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditTemplateView.swift; sourceTree = "<group>"; };
+		2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInitialsButton.swift; sourceTree = "<group>"; };
+		2661CD872EE77D8500867E4D /* SearchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchButton.swift; sourceTree = "<group>"; };
+		2661CD892EE77D8C00867E4D /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
+		2661CD8B2EE77D9400867E4D /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
+		2661CD8D2EE77D9A00867E4D /* CancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelButton.swift; sourceTree = "<group>"; };
+		2661CD8F2EE77DA100867E4D /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		2661CD912EE77DA700867E4D /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
+		2661CD932EE77DAD00867E4D /* DoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoneButton.swift; sourceTree = "<group>"; };
+		2661CD952EE77DB800867E4D /* HeaderTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitle.swift; sourceTree = "<group>"; };
+		2661CD972EE77DD200867E4D /* ToolbarConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarConfig.swift; sourceTree = "<group>"; };
 		269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
 		269686F52EE1E60500CEFB6F /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCalculations.swift; sourceTree = "<group>"; };
@@ -78,6 +98,32 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		2661CD992EE79F2500867E4D /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				262479352EE1DB2F0029083B /* TemplatesView.swift */,
+				262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */,
+			);
+			path = Templates;
+			sourceTree = "<group>";
+		};
+		2661CD9A2EE79F4000867E4D /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */,
+				269686F52EE1E60500CEFB6F /* ProgressView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		2661CD9B2EE79F5E00867E4D /* Workout */ = {
+			isa = PBXGroup;
+			children = (
+				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
+			);
+			path = Workout;
+			sourceTree = "<group>";
+		};
 		269686F92EE21DAF00CEFB6F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +144,16 @@
 				26AE90CE2EDF715800B2BE71 /* ContentView.swift */,
 				26AE90CC2EDF715800B2BE71 /* upliftApp.swift */,
 				26AE90CA2EDF715800B2BE71 /* Products */,
+				2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */,
+				2661CD872EE77D8500867E4D /* SearchButton.swift */,
+				2661CD892EE77D8C00867E4D /* AddButton.swift */,
+				2661CD8B2EE77D9400867E4D /* SaveButton.swift */,
+				2661CD8D2EE77D9A00867E4D /* CancelButton.swift */,
+				2661CD8F2EE77DA100867E4D /* BackButton.swift */,
+				2661CD912EE77DA700867E4D /* MenuButton.swift */,
+				2661CD932EE77DAD00867E4D /* DoneButton.swift */,
+				2661CD952EE77DB800867E4D /* HeaderTitle.swift */,
+				2661CD972EE77DD200867E4D /* ToolbarConfig.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,12 +179,10 @@
 		26AE90E02EE0A6E200B2BE71 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
-				269686F52EE1E60500CEFB6F /* ProgressView.swift */,
-				269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */,
+				2661CD9B2EE79F5E00867E4D /* Workout */,
+				2661CD9A2EE79F4000867E4D /* Progress */,
+				2661CD992EE79F2500867E4D /* Templates */,
 				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
-				262479352EE1DB2F0029083B /* TemplatesView.swift */,
-				262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,19 +260,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				262113FD2EE0D9AF00A041AD /* WorkoutLoggingView.swift in Sources */,
+				2661CD882EE77D8500867E4D /* SearchButton.swift in Sources */,
 				26D5EB742EE34AC400042FA0 /* GradientBorder.swift in Sources */,
+				2661CD8A2EE77D8C00867E4D /* AddButton.swift in Sources */,
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
+				2661CD8E2EE77D9A00867E4D /* CancelButton.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
 				269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */,
 				262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */,
+				2661CD8C2EE77D9400867E4D /* SaveButton.swift in Sources */,
 				262479382EE1DB510029083B /* CreateEditTemplateView.swift in Sources */,
+				2661CD862EE77D8000867E4D /* UserInitialsButton.swift in Sources */,
 				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
+				2661CD962EE77DB800867E4D /* HeaderTitle.swift in Sources */,
+				2661CD982EE77DD200867E4D /* ToolbarConfig.swift in Sources */,
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
 				262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */,
 				269686FB2EE21F1400CEFB6F /* WorkoutManagers.swift in Sources */,
 				262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */,
 				26AE90DC2EE0A58800B2BE71 /* Exercise.swift in Sources */,
+				2661CD902EE77DA100867E4D /* BackButton.swift in Sources */,
 				269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */,
+				2661CD942EE77DAD00867E4D /* DoneButton.swift in Sources */,
+				2661CD922EE77DA700867E4D /* MenuButton.swift in Sources */,
 				269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */,
 				262479342EE1D44A0029083B /* DummyData.swift in Sources */,
 				262479362EE1DB330029083B /* TemplatesView.swift in Sources */,

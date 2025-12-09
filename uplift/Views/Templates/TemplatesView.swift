@@ -27,9 +27,6 @@ struct TemplatesView: View {
                 Color.black.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Custom Header
-                    headerView
-                    
                     if workoutManager.templates.isEmpty {
                         // Empty State
                         emptyStateView
@@ -92,6 +89,23 @@ struct TemplatesView: View {
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    UserInitialsButton(initials: "RC", action: nil)
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(title: "Templates")
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    AddButton {
+                        showingCreateTemplate = true
+                    }
+                }
+            }
+            .standardToolbar()
             .sheet(isPresented: $showingCreateTemplate) {
                 CreateEditTemplateView(
                     template: nil,
@@ -117,48 +131,6 @@ struct TemplatesView: View {
     }
     
     // MARK: - Empty State
-    
-    private var headerView: some View {
-        HStack(spacing: 16) {
-            // User initials circle on the left
-            ZStack {
-                Circle()
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 44, height: 44)
-                
-                Text("RC")  // User initials
-                    .font(.futuraHeadline())
-                    .foregroundColor(.white)
-            }
-            
-            Spacer()
-            
-            // Centered "Templates" text
-            Text("Templates")
-                .font(.futuraTitle2())
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-            
-            Spacer()
-            
-            // Add button on the right
-            Button(action: {
-                showingCreateTemplate = true
-            }) {
-                ZStack {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 44, height: 44)
-                    
-                    Image(systemName: "plus")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 12)
-    }
     
     private var emptyStateView: some View {
         VStack(spacing: 24) {

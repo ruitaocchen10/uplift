@@ -13,46 +13,6 @@ struct ProgressView: View {
     @State private var selectedMonth: Date = Date()
     @State private var selectedExercise: ExerciseStats?
     
-    private var headerView: some View {
-        HStack(spacing: 16) {
-            // User initials circle on the left
-            ZStack {
-                Circle()
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 44, height: 44)
-                
-                Text("RC")  // User initials
-                    .font(.futuraHeadline())
-                    .foregroundColor(.white)
-            }
-            
-            Spacer()
-            
-            // Centered "Progress" text
-            Text("Progress")
-                .font(.futuraTitle2())
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-            
-            Spacer()
-            
-            // Search button on the right
-            Button(action: {}) {
-                ZStack {
-                    Circle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 44, height: 44)
-                    
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.white)
-                        .font(.futuraBody())
-                }
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 12)
-    }
-    
     private var workoutDates: Set<Date> {
         workoutManager.workoutDates()
     }
@@ -67,9 +27,6 @@ struct ProgressView: View {
                 Color.black.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Custom Header
-                    headerView
-                    
                     if exerciseStats.isEmpty {
                         // Empty State
                         emptyStateView
@@ -87,6 +44,23 @@ struct ProgressView: View {
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    UserInitialsButton(initials: "RC", action: nil)
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    HeaderTitle(title: "Progress")
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    SearchButton {
+                        // TODO: Implement search
+                    }
+                }
+            }
+            .standardToolbar()
             .sheet(item: $selectedExercise) { stats in
                 ExerciseDetailView(exerciseStats: stats)
             }
