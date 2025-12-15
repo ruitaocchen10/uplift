@@ -82,6 +82,65 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2612C8A12EF0AFCE00D9F626 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8A22EF0AFDB00D9F626 /* DesignSystem */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		2612C8A22EF0AFDB00D9F626 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8A62EF0B00200D9F626 /* Layout */,
+				2612C8A52EF0AFFD00D9F626 /* Typography */,
+				2612C8A32EF0AFE800D9F626 /* Components */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		2612C8A32EF0AFE800D9F626 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8A42EF0AFEF00D9F626 /* Buttons */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2612C8A42EF0AFEF00D9F626 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */,
+				2661CD872EE77D8500867E4D /* SearchButton.swift */,
+				2661CD892EE77D8C00867E4D /* AddButton.swift */,
+				2661CD8B2EE77D9400867E4D /* SaveButton.swift */,
+				2661CD8D2EE77D9A00867E4D /* CancelButton.swift */,
+				2661CD8F2EE77DA100867E4D /* BackButton.swift */,
+				2661CD912EE77DA700867E4D /* MenuButton.swift */,
+				2661CD932EE77DAD00867E4D /* DoneButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
+		2612C8A52EF0AFFD00D9F626 /* Typography */ = {
+			isa = PBXGroup;
+			children = (
+				262113E12EE0C12500A041AD /* Font+Extension.swift */,
+			);
+			path = Typography;
+			sourceTree = "<group>";
+		};
+		2612C8A62EF0B00200D9F626 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				26D5EB732EE34AC100042FA0 /* GradientBorder.swift */,
+				2661CD972EE77DD200867E4D /* ToolbarConfig.swift */,
+				2661CD952EE77DB800867E4D /* HeaderTitle.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
 		262113DE2EE0C10800A041AD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -94,8 +153,6 @@
 		262113DF2EE0C11100A041AD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				26D5EB732EE34AC100042FA0 /* GradientBorder.swift */,
-				262113E12EE0C12500A041AD /* Font+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -153,6 +210,7 @@
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				2612C8A12EF0AFCE00D9F626 /* Core */,
 				269686F92EE21DAF00CEFB6F /* Managers */,
 				262479332EE1D4470029083B /* DummyData.swift */,
 				262113DE2EE0C10800A041AD /* Utilities */,
@@ -162,16 +220,6 @@
 				26AE90CE2EDF715800B2BE71 /* ContentView.swift */,
 				26AE90CC2EDF715800B2BE71 /* upliftApp.swift */,
 				26AE90CA2EDF715800B2BE71 /* Products */,
-				2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */,
-				2661CD872EE77D8500867E4D /* SearchButton.swift */,
-				2661CD892EE77D8C00867E4D /* AddButton.swift */,
-				2661CD8B2EE77D9400867E4D /* SaveButton.swift */,
-				2661CD8D2EE77D9A00867E4D /* CancelButton.swift */,
-				2661CD8F2EE77DA100867E4D /* BackButton.swift */,
-				2661CD912EE77DA700867E4D /* MenuButton.swift */,
-				2661CD932EE77DAD00867E4D /* DoneButton.swift */,
-				2661CD952EE77DB800867E4D /* HeaderTitle.swift */,
-				2661CD972EE77DD200867E4D /* ToolbarConfig.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -236,7 +284,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2610;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					26AE90C82EDF715800B2BE71 = {
 						CreatedOnToolsVersion = 26.1.1;
@@ -347,6 +395,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -370,6 +419,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -410,6 +460,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -426,6 +477,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -438,7 +490,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -470,7 +521,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NS8CC9Z25V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
