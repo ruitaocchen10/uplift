@@ -7,30 +7,6 @@
 
 import Foundation
 
-// MARK: - Data Models for Progress
-
-struct ExerciseStats: Identifiable {
-    let id = UUID()
-    let exerciseName: String
-    let personalBest: PersonalBest
-    let totalWorkouts: Int
-    let lastPerformed: Date?
-    let maxWeightHistory: [DataPoint]
-    let volumeHistory: [DataPoint]
-}
-
-struct PersonalBest {
-    let weight: Double
-    let reps: Int
-    let date: Date
-}
-
-struct DataPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    let value: Double
-}
-
 // MARK: - Progress Calculations
 
 struct ProgressCalculations {
