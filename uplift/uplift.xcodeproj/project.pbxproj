@@ -118,6 +118,7 @@
 				2661CD8D2EE77D9A00867E4D /* CancelButton.swift */,
 				2661CD8F2EE77DA100867E4D /* BackButton.swift */,
 				2661CD912EE77DA700867E4D /* MenuButton.swift */,
+				2661CD9E2EE7C61B00867E4D /* ActionButton.swift */,
 				2661CD932EE77DAD00867E4D /* DoneButton.swift */,
 			);
 			path = Buttons;
@@ -141,6 +142,83 @@
 			path = Layout;
 			sourceTree = "<group>";
 		};
+		2612C8A72EF0B0C600D9F626 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8AB2EF0B0E700D9F626 /* Workout */,
+				2612C8AA2EF0B0E100D9F626 /* Progress */,
+				2612C8A92EF0B0DB00D9F626 /* Templates */,
+				2612C8A82EF0B0D300D9F626 /* Home */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		2612C8A82EF0B0D300D9F626 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8AF2EF0B10800D9F626 /* Views */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		2612C8A92EF0B0DB00D9F626 /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8AE2EF0B0FC00D9F626 /* Views */,
+			);
+			path = Templates;
+			sourceTree = "<group>";
+		};
+		2612C8AA2EF0B0E100D9F626 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8AD2EF0B0F800D9F626 /* Views */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		2612C8AB2EF0B0E700D9F626 /* Workout */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8AC2EF0B0F400D9F626 /* Views */,
+			);
+			path = Workout;
+			sourceTree = "<group>";
+		};
+		2612C8AC2EF0B0F400D9F626 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2612C8AD2EF0B0F800D9F626 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */,
+				269686F52EE1E60500CEFB6F /* ProgressView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2612C8AE2EF0B0FC00D9F626 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */,
+				262479352EE1DB2F0029083B /* TemplatesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2612C8AF2EF0B10800D9F626 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		262113DE2EE0C10800A041AD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,48 +235,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		2661CD992EE79F2500867E4D /* Templates */ = {
-			isa = PBXGroup;
-			children = (
-				262479352EE1DB2F0029083B /* TemplatesView.swift */,
-				262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */,
-			);
-			path = Templates;
-			sourceTree = "<group>";
-		};
-		2661CD9A2EE79F4000867E4D /* Progress */ = {
-			isa = PBXGroup;
-			children = (
-				269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */,
-				269686F52EE1E60500CEFB6F /* ProgressView.swift */,
-			);
-			path = Progress;
-			sourceTree = "<group>";
-		};
-		2661CD9B2EE79F5E00867E4D /* Workout */ = {
-			isa = PBXGroup;
-			children = (
-				262113FC2EE0D9A900A041AD /* WorkoutLoggingView.swift */,
-			);
-			path = Workout;
-			sourceTree = "<group>";
-		};
-		2661CD9C2EE7C60E00867E4D /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				2661CD9D2EE7C61800867E4D /* Buttons */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		2661CD9D2EE7C61800867E4D /* Buttons */ = {
-			isa = PBXGroup;
-			children = (
-				2661CD9E2EE7C61B00867E4D /* ActionButton.swift */,
-			);
-			path = Buttons;
-			sourceTree = "<group>";
-		};
 		269686F92EE21DAF00CEFB6F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,11 +246,11 @@
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				2612C8A72EF0B0C600D9F626 /* Features */,
 				2612C8A12EF0AFCE00D9F626 /* Core */,
 				269686F92EE21DAF00CEFB6F /* Managers */,
 				262479332EE1D4470029083B /* DummyData.swift */,
 				262113DE2EE0C10800A041AD /* Utilities */,
-				26AE90E02EE0A6E200B2BE71 /* Views */,
 				26AE90D72EE0A3C100B2BE71 /* Models */,
 				26AE90D02EDF715C00B2BE71 /* Assets.xcassets */,
 				26AE90CE2EDF715800B2BE71 /* ContentView.swift */,
@@ -240,18 +276,6 @@
 				262113E72EE0C77700A041AD /* WorkoutSession.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		26AE90E02EE0A6E200B2BE71 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				2661CD9C2EE7C60E00867E4D /* Components */,
-				2661CD9B2EE79F5E00867E4D /* Workout */,
-				2661CD9A2EE79F4000867E4D /* Progress */,
-				2661CD992EE79F2500867E4D /* Templates */,
-				26AE90E12EE0A6E900B2BE71 /* HomeView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
