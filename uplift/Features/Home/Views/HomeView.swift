@@ -118,7 +118,9 @@ struct HomeView: View {
                 }
                 Button("Delete", role: .destructive) {
                     if let workout = workoutToDelete {
-                        workoutManager.deleteWorkout(workout)
+                        Task {
+                            await workoutManager.deleteWorkout(workout)
+                        }
                     }
                     workoutToDelete = nil
                 }
@@ -351,7 +353,9 @@ struct HomeView: View {
 
     private func handleTemplateSelection(_ template: WorkoutTemplate) {
         let newWorkout = WorkoutSession.fromTemplate(template, date: selectedDate)
-        workoutManager.addWorkout(newWorkout)
+        Task {
+            await workoutManager.addWorkout(newWorkout)
+        }
         
         // For today or past, open workout logging immediately
         if !isSelectedDateFuture {

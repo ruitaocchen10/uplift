@@ -11,74 +11,65 @@ import SwiftData
 
 @MainActor
 class WorkoutManager: ObservableObject {
-    // Published properties - views observe these
     @Published var workouts: [WorkoutSession] = []
     @Published var templates: [WorkoutTemplate] = []
     
-    private let modelContext: ModelContext
+    private let repository: WorkoutRepositoryProtocol  // ✅ NEW
     
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-        loadAllData()
+    init(repository: WorkoutRepositoryProtocol) {      // ✅ NEW
+        self.repository = repository
+        Task {
+            await loadAllData()  // ✅ Now async
+        }
     }
     
     // MARK: - Load Data
     
-    private func loadAllData() {
-        loadWorkouts()
-        loadTemplates()
+    private func loadAllData() async {
+        await loadWorkouts()
+        await loadTemplates()
     }
     
-    private func loadWorkouts() {
-        let descriptor = FetchDescriptor<WorkoutSession>(
-            sortBy: [SortDescriptor(\.date, order: .reverse)]
-        )
-        workouts = (try? modelContext.fetch(descriptor)) ?? []
+    private func loadWorkouts() async {
+        workouts = await repository.fetchWorkouts()
     }
     
-    private func loadTemplates() {
-        let descriptor = FetchDescriptor<WorkoutTemplate>(
-            sortBy: [SortDescriptor(\.name)]
-        )
-        templates = (try? modelContext.fetch(descriptor)) ?? []
+    private func loadTemplates() async {
+        templates = await repository.fetchTemplates()
     }
     
     // MARK: - Workout Operations
     
-    func addWorkout(_ workout: WorkoutSession) {
-        modelContext.insert(workout)
-        try? modelContext.save()
-        workouts.append(workout)
+    func addWorkout(_ workout: WorkoutSession) async {
+        try? await repository.save(workout)
+        await loadWorkouts()
     }
     
-    func updateWorkout(_ workout: WorkoutSession) {
-        try? modelContext.save()
-        loadWorkouts() // Refresh
+    func updateWorkout(_ workout: WorkoutSession) async {
+        try? await repository.save(workout)
+        await loadWorkouts()
     }
     
-    func deleteWorkout(_ workout: WorkoutSession) {
-        modelContext.delete(workout)
-        try? modelContext.save()
-        workouts.removeAll { $0.id == workout.id }
+    func deleteWorkout(_ workout: WorkoutSession) async {
+        try? await repository.delete(workout)
+        await loadWorkouts()
     }
     
     // MARK: - Template Operations
     
-    func addTemplate(_ template: WorkoutTemplate) {
-        modelContext.insert(template)
-        try? modelContext.save()
-        templates.append(template)
+    func addTemplate(_ template: WorkoutTemplate) async {
+        try? await repository.save(template)
+        await loadTemplates()
     }
     
-    func updateTemplate(_ template: WorkoutTemplate) {
-        try? modelContext.save()
-        loadTemplates() // Refresh
+    func updateTemplate(_ template: WorkoutTemplate) async {
+        try? await repository.save(template)
+        await loadTemplates()
     }
     
-    func deleteTemplate(_ template: WorkoutTemplate) {
-        modelContext.delete(template)
-        try? modelContext.save()
-        templates.removeAll { $0.id == template.id }
+    func deleteTemplate(_ template: WorkoutTemplate) async {
+        try? await repository.delete(template)
+        await loadTemplates()
     }
     
     // MARK: - Helper Methods
@@ -99,7 +90,7 @@ class WorkoutManager: ObservableObject {
     
     // MARK: - Seeding (Optional)
     
-    func seedDataIfNeeded() {
+    func seedDataIfNeeded() async {
         // Only seed if database is empty
         guard workouts.isEmpty && templates.isEmpty else { return }
         
@@ -117,7 +108,7 @@ class WorkoutManager: ObservableObject {
                     )
                 }
             )
-            addTemplate(template)
+            await addTemplate(template)
         }
         
         // Add workouts
@@ -141,7 +132,7 @@ class WorkoutManager: ObservableObject {
                 isCompleted: workoutData.isCompleted,
                 notes: workoutData.notes
             )
-            addWorkout(workout)
+            await addWorkout(workout)
         }
     }
 }

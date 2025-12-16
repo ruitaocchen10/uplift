@@ -10,6 +10,9 @@
 		2612C8B72EF0B78000D9F626 /* ExerciseStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8B62EF0B77B00D9F626 /* ExerciseStats.swift */; };
 		2612C8B92EF0B7AC00D9F626 /* PersonalBest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8B82EF0B7A700D9F626 /* PersonalBest.swift */; };
 		2612C8BB2EF0B7C600D9F626 /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8BA2EF0B7C000D9F626 /* DataPoint.swift */; };
+		2612C8C72EF1AA3C00D9F626 /* WorkoutRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8C62EF1A9FD00D9F626 /* WorkoutRepository.swift */; };
+		2612C8C82EF1AA4100D9F626 /* WorkoutRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8C42EF1A9A300D9F626 /* WorkoutRepositoryProtocol.swift */; };
+		2612C8C92EF1AA4600D9F626 /* LocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2612C8C52EF1A9D100D9F626 /* LocalDataSource.swift */; };
 		262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E12EE0C12500A041AD /* Font+Extension.swift */; };
 		262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E52EE0C76600A041AD /* WorkoutTemplate.swift */; };
 		262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262113E72EE0C77700A041AD /* WorkoutSession.swift */; };
@@ -45,6 +48,9 @@
 		2612C8B62EF0B77B00D9F626 /* ExerciseStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseStats.swift; sourceTree = "<group>"; };
 		2612C8B82EF0B7A700D9F626 /* PersonalBest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalBest.swift; sourceTree = "<group>"; };
 		2612C8BA2EF0B7C000D9F626 /* DataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
+		2612C8C42EF1A9A300D9F626 /* WorkoutRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRepositoryProtocol.swift; sourceTree = "<group>"; };
+		2612C8C52EF1A9D100D9F626 /* LocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSource.swift; sourceTree = "<group>"; };
+		2612C8C62EF1A9FD00D9F626 /* WorkoutRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRepository.swift; sourceTree = "<group>"; };
 		262113E12EE0C12500A041AD /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		262113E52EE0C76600A041AD /* WorkoutTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplate.swift; sourceTree = "<group>"; };
 		262113E72EE0C77700A041AD /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
@@ -280,6 +286,56 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		2612C8BE2EF1A8BD00D9F626 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C22EF1A8E400D9F626 /* DataSources */,
+				2612C8BF2EF1A8C600D9F626 /* Repository */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		2612C8BF2EF1A8C600D9F626 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C12EF1A8D700D9F626 /* Implementation */,
+				2612C8C02EF1A8D000D9F626 /* Protocol */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		2612C8C02EF1A8D000D9F626 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C42EF1A9A300D9F626 /* WorkoutRepositoryProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		2612C8C12EF1A8D700D9F626 /* Implementation */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C62EF1A9FD00D9F626 /* WorkoutRepository.swift */,
+			);
+			path = Implementation;
+			sourceTree = "<group>";
+		};
+		2612C8C22EF1A8E400D9F626 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C32EF1A8EF00D9F626 /* Local */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		2612C8C32EF1A8EF00D9F626 /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				2612C8C52EF1A9D100D9F626 /* LocalDataSource.swift */,
+			);
+			path = Local;
+			sourceTree = "<group>";
+		};
 		262113DE2EE0C10800A041AD /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +362,7 @@
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				2612C8BE2EF1A8BD00D9F626 /* Data */,
 				2612C8B02EF0B24900D9F626 /* Domain */,
 				2612C8A72EF0B0C600D9F626 /* Features */,
 				2612C8A12EF0AFCE00D9F626 /* Core */,
@@ -415,16 +472,19 @@
 				26AE90CF2EDF715800B2BE71 /* ContentView.swift in Sources */,
 				2661CD8E2EE77D9A00867E4D /* CancelButton.swift in Sources */,
 				26AE90CD2EDF715800B2BE71 /* upliftApp.swift in Sources */,
+				2612C8C92EF1AA4600D9F626 /* LocalDataSource.swift in Sources */,
 				269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */,
 				262113E22EE0C15C00A041AD /* Font+Extension.swift in Sources */,
 				2612C8BB2EF0B7C600D9F626 /* DataPoint.swift in Sources */,
 				2661CD8C2EE77D9400867E4D /* SaveButton.swift in Sources */,
 				262479382EE1DB510029083B /* CreateEditTemplateView.swift in Sources */,
+				2612C8C72EF1AA3C00D9F626 /* WorkoutRepository.swift in Sources */,
 				2661CD862EE77D8000867E4D /* UserInitialsButton.swift in Sources */,
 				26AE90DD2EE0A59200B2BE71 /* WorkoutSet.swift in Sources */,
 				2661CD962EE77DB800867E4D /* HeaderTitle.swift in Sources */,
 				2661CD982EE77DD200867E4D /* ToolbarConfig.swift in Sources */,
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
+				2612C8C82EF1AA4100D9F626 /* WorkoutRepositoryProtocol.swift in Sources */,
 				262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */,
 				2612C8B72EF0B78000D9F626 /* ExerciseStats.swift in Sources */,
 				269686FB2EE21F1400CEFB6F /* WorkoutManagers.swift in Sources */,

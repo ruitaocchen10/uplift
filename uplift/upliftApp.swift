@@ -26,10 +26,12 @@ struct upliftApp: App {
             modelContainer = try ModelContainer(for: schema, configurations: [config])
             
             let context = modelContainer.mainContext
-            workoutManager = WorkoutManager(modelContext: context)
             
-            // Optional: Seed with dummy data on first launch
-            workoutManager.seedDataIfNeeded()
+            // ✅ NEW: Create repository
+            let repository = WorkoutRepository(modelContext: context)
+            
+            // ✅ NEW: Pass repository to WorkoutManager
+            workoutManager = WorkoutManager(repository: repository)
             
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
@@ -40,6 +42,10 @@ struct upliftApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(workoutManager)
+                .task {
+                    // Seed with dummy data on first launch
+                    await workoutManager.seedDataIfNeeded()
+                }
         }
         .modelContainer(modelContainer)
     }

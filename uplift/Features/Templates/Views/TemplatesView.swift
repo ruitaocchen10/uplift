@@ -110,7 +110,9 @@ struct TemplatesView: View {
                 CreateEditTemplateView(
                     template: nil,
                     onSave: { newTemplate in
-                        workoutManager.addTemplate(newTemplate)
+                        Task {
+                            await workoutManager.addTemplate(newTemplate)
+                        }
                     }
                 )
             }
@@ -119,10 +121,12 @@ struct TemplatesView: View {
                     CreateEditTemplateView(
                         template: workoutManager.templates[index],
                         onSave: { updatedTemplate in
-                            let original = workoutManager.templates[index]
-                            original.name = updatedTemplate.name
-                            original.exercises = updatedTemplate.exercises
-                            workoutManager.updateTemplate(original)
+                            Task {
+                                let original = workoutManager.templates[index]
+                                original.name = updatedTemplate.name
+                                original.exercises = updatedTemplate.exercises
+                                await workoutManager.updateTemplate(original)
+                            }
                         }
                     )
                 }
@@ -171,7 +175,9 @@ struct TemplatesView: View {
     }
     
     private func deleteTemplate(_ template: WorkoutTemplate) {
-        workoutManager.deleteTemplate(template)
+        Task {
+            await workoutManager.deleteTemplate(template)
+        }
         favoriteTemplateIds.remove(template.id)
     }
 }
