@@ -89,10 +89,17 @@ class WorkoutManager: ObservableObject {
     }
     
     // MARK: - Seeding (Optional)
-    
+
     func seedDataIfNeeded() async {
-        // Only seed if database is empty
-        guard workouts.isEmpty && templates.isEmpty else { return }
+        // Check if we've already seeded using persistent flag
+        let hasSeeded = UserDefaults.standard.bool(forKey: "hasSeededData")
+        
+        guard !hasSeeded else {
+            print("✅ Data already seeded, skipping")
+            return
+        }
+        
+        print("🌱 First launch - seeding dummy data")
         
         // Add templates
         for templateData in DummyData.sampleTemplates {
@@ -108,7 +115,7 @@ class WorkoutManager: ObservableObject {
                     )
                 }
             )
-            await addTemplate(template)
+            try? await repository.save(template)
         }
         
         // Add workouts
@@ -132,7 +139,11 @@ class WorkoutManager: ObservableObject {
                 isCompleted: workoutData.isCompleted,
                 notes: workoutData.notes
             )
-            await addWorkout(workout)
+            try? await repository.save(workout)
         }
+        
+        // Mark as seeded so this never runs again
+        UserDefaults.standard.set(true, forKey: "hasSeededData")
+        print("✅ Dummy data seeded successfully")
     }
 }

@@ -31,6 +31,8 @@
 		2661CD962EE77DB800867E4D /* HeaderTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD952EE77DB800867E4D /* HeaderTitle.swift */; };
 		2661CD982EE77DD200867E4D /* ToolbarConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD972EE77DD200867E4D /* ToolbarConfig.swift */; };
 		2661CD9F2EE7C61E00867E4D /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661CD9E2EE7C61B00867E4D /* ActionButton.swift */; };
+		268A6A802EF49F16000844F7 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268A6A7F2EF49F11000844F7 /* SyncEngine.swift */; };
+		268A6A832EF4A124000844F7 /* CloudDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268A6A822EF4A121000844F7 /* CloudDataSource.swift */; };
 		269686F42EE1E5FA00CEFB6F /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */; };
 		269686F62EE1E60700CEFB6F /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F52EE1E60500CEFB6F /* ProgressView.swift */; };
 		269686F82EE1E64D00CEFB6F /* ProgressCalculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */; };
@@ -58,6 +60,7 @@
 		262479332EE1D4470029083B /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		262479352EE1DB2F0029083B /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
 		262479372EE1DB4C0029083B /* CreateEditTemplateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditTemplateView.swift; sourceTree = "<group>"; };
+		263EC2D52EF39546009768DA /* uplift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = uplift.entitlements; sourceTree = "<group>"; };
 		2661CD852EE77D7F00867E4D /* UserInitialsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInitialsButton.swift; sourceTree = "<group>"; };
 		2661CD872EE77D8500867E4D /* SearchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchButton.swift; sourceTree = "<group>"; };
 		2661CD892EE77D8C00867E4D /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
@@ -69,6 +72,8 @@
 		2661CD952EE77DB800867E4D /* HeaderTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTitle.swift; sourceTree = "<group>"; };
 		2661CD972EE77DD200867E4D /* ToolbarConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarConfig.swift; sourceTree = "<group>"; };
 		2661CD9E2EE7C61B00867E4D /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		268A6A7F2EF49F11000844F7 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		268A6A822EF4A121000844F7 /* CloudDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudDataSource.swift; sourceTree = "<group>"; };
 		269686F32EE1E5F600CEFB6F /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
 		269686F52EE1E60500CEFB6F /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		269686F72EE1E64800CEFB6F /* ProgressCalculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCalculations.swift; sourceTree = "<group>"; };
@@ -289,6 +294,7 @@
 		2612C8BE2EF1A8BD00D9F626 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				268A6A7E2EF49F00000844F7 /* Sync */,
 				2612C8C22EF1A8E400D9F626 /* DataSources */,
 				2612C8BF2EF1A8C600D9F626 /* Repository */,
 			);
@@ -323,6 +329,7 @@
 		2612C8C22EF1A8E400D9F626 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				268A6A812EF4A117000844F7 /* Remote */,
 				2612C8C32EF1A8EF00D9F626 /* Local */,
 			);
 			path = DataSources;
@@ -351,6 +358,22 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		268A6A7E2EF49F00000844F7 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				268A6A7F2EF49F11000844F7 /* SyncEngine.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		268A6A812EF4A117000844F7 /* Remote */ = {
+			isa = PBXGroup;
+			children = (
+				268A6A822EF4A121000844F7 /* CloudDataSource.swift */,
+			);
+			path = Remote;
+			sourceTree = "<group>";
+		};
 		269686F92EE21DAF00CEFB6F /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,6 +385,7 @@
 		26AE90C02EDF715800B2BE71 = {
 			isa = PBXGroup;
 			children = (
+				263EC2D52EF39546009768DA /* uplift.entitlements */,
 				2612C8BE2EF1A8BD00D9F626 /* Data */,
 				2612C8B02EF0B24900D9F626 /* Domain */,
 				2612C8A72EF0B0C600D9F626 /* Features */,
@@ -369,7 +393,6 @@
 				269686F92EE21DAF00CEFB6F /* Managers */,
 				262479332EE1D4470029083B /* DummyData.swift */,
 				262113DE2EE0C10800A041AD /* Utilities */,
-				26AE90D72EE0A3C100B2BE71 /* Models */,
 				26AE90D02EDF715C00B2BE71 /* Assets.xcassets */,
 				26AE90CE2EDF715800B2BE71 /* ContentView.swift */,
 				26AE90CC2EDF715800B2BE71 /* upliftApp.swift */,
@@ -383,13 +406,6 @@
 				26AE90C92EDF715800B2BE71 /* uplift.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		26AE90D72EE0A3C100B2BE71 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -486,6 +502,8 @@
 				26AE90E22EE0A74400B2BE71 /* HomeView.swift in Sources */,
 				2612C8C82EF1AA4100D9F626 /* WorkoutRepositoryProtocol.swift in Sources */,
 				262113E62EE0C76900A041AD /* WorkoutTemplate.swift in Sources */,
+				268A6A832EF4A124000844F7 /* CloudDataSource.swift in Sources */,
+				268A6A802EF49F16000844F7 /* SyncEngine.swift in Sources */,
 				2612C8B72EF0B78000D9F626 /* ExerciseStats.swift in Sources */,
 				269686FB2EE21F1400CEFB6F /* WorkoutManagers.swift in Sources */,
 				262113E82EE0C77A00A041AD /* WorkoutSession.swift in Sources */,
@@ -632,6 +650,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = uplift.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -663,6 +682,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = uplift.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;

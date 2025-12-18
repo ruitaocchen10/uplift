@@ -22,16 +22,36 @@ struct upliftApp: App {
                 WorkoutTemplate.self,
                 TemplateExercise.self
             ])
-            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+            
+            let config = ModelConfiguration(
+                schema: schema,
+                url: URL.applicationSupportDirectory.appending(path: "uplift.store"),
+                cloudKitDatabase: .none
+            )
+            
             modelContainer = try ModelContainer(for: schema, configurations: [config])
             
             let context = modelContainer.mainContext
             
-            // ✅ NEW: Create repository
-            let repository = WorkoutRepository(modelContext: context)
+            // ✅ NEW: Create CloudDataSource
+            let cloudDataSource = CloudDataSource()
+            print("☁️ CloudDataSource initialized")
             
-            // ✅ NEW: Pass repository to WorkoutManager
+            // ✅ NEW: Create SyncEngine
+            let syncEngine = SyncEngine()
+            print("🔄 SyncEngine initialized")
+            
+            // ✅ UPDATED: Create repository with all dependencies
+            let repository = WorkoutRepository(
+                modelContext: context,
+                cloudDataSource: cloudDataSource,
+                syncEngine: syncEngine
+            )
+            print("📦 Repository initialized with cloud sync")
+            
+            // Pass repository to WorkoutManager
             workoutManager = WorkoutManager(repository: repository)
+            print("✅ WorkoutManager initialized")
             
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
